@@ -9,22 +9,27 @@ namespace Rex2
     {
         public static void Main()
         {
-            const int screenWidth = 320;
-            const int screenHeight = 320;
+            const int screenWidth = 310;
+            const int screenHeight = 310;
 
-            const int gameWidth = screenWidth * 4;
-            const int gameHeight = screenHeight * 2;
+            const int gameWidth = 640;
+            const int gameHeight = 360;
+            const int scale = 2;
 
-            InitWindow(gameWidth, gameHeight, "Rex2");
+            InitWindow(gameWidth * scale, gameHeight * scale, "Rex2");
             SetTargetFPS(60);
             RenderTexture2D screenPlayer1 = LoadRenderTexture(screenWidth, screenHeight);
             RenderTexture2D screenPlayer2 = LoadRenderTexture(screenWidth, screenHeight);
-            float scale = gameHeight / screenHeight;
-            Rectangle sourceRec = new Rectangle(0.0f, 0.0f, screenPlayer1.texture.width, -screenPlayer1.texture.height);
-            Rectangle destRec = new Rectangle(0, 0, screenWidth * scale, screenHeight * scale);
-            Rectangle destRec2 = new Rectangle(screenWidth * scale, 0, screenWidth * scale, screenHeight * scale);
+            Texture2D baseTexture = LoadTexture("assets/base.png");
+            Texture2D chevron = LoadTexture("assets/chevron.png");
 
-            TestLevel test = new TestLevel(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2);
+            Rectangle sourceRec = new Rectangle(0.0f, 0.0f, screenPlayer1.texture.width, -screenPlayer1.texture.height);
+            Rectangle destRec = new Rectangle(6 * scale, 27 * scale, screenWidth * scale, screenHeight * scale);
+            Rectangle destRec2 = new Rectangle(324 * scale, 27 * scale, screenWidth * scale, screenHeight * scale);
+            Rectangle chevroSrc = new Rectangle(0, 0, chevron.width, chevron.height);
+            Rectangle chevroDest = new Rectangle(468 * scale, 330 * scale, 22 * scale, 12 * scale);
+            TestLevel test = new TestLevel(screenHeight, screenWidth, new Vector2(324, 27), ref screenPlayer1, ref screenPlayer2);
+
             LevelManager levelManager = new LevelManager(test, null!, null!, null!);
             levelManager.Welcome();
 
@@ -36,13 +41,21 @@ namespace Rex2
 
                 BeginDrawing();
                 ClearBackground(BLACK);
+
+                DrawTextureEx(baseTexture, Vector2.Zero, 0, 2, WHITE);
                 DrawTexturePro(screenPlayer1.texture, sourceRec, destRec, new Vector2(0, 0), 0.0f, WHITE);
                 DrawTexturePro(screenPlayer2.texture, sourceRec, destRec2, new Vector2(0, 0), 0.0f, WHITE);
+
+                levelManager.Current.DrawMain();
+
+                DrawTexturePro(chevron, chevroSrc, chevroDest, new Vector2(0, 0), 0, WHITE);
+
                 EndDrawing();
             }
 
             UnloadRenderTexture(screenPlayer1);
             UnloadRenderTexture(screenPlayer2);
+            UnloadTexture(baseTexture);
             levelManager.Current.Unload();
 
             CloseWindow();

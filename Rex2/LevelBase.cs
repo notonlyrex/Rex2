@@ -34,6 +34,8 @@ namespace Rex2
         protected RenderTexture2D screenPlayer2;
         protected Font font;
         protected int framesCounter;
+        protected Timer timer;
+        protected TimerCallback timerCallback;
 
         public LevelBase(int screenHeight, int screenWidth, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2)
         {
@@ -44,6 +46,10 @@ namespace Rex2
             this.screenPlayer2 = screenPlayer2;
 
             font = Raylib.LoadFontEx("assets/opensans.ttf", 48, null, 5000);
+        }
+
+        protected virtual void TimerCallback()
+        {
         }
 
         public virtual void Update(float deltaTime)
@@ -61,12 +67,16 @@ namespace Rex2
             Vector2 mouse = Raylib.GetMousePosition();
             Vector2 virtualMouse = Vector2.Zero;
 
-            virtualMouse.X = mouse.X / scale - screenWidth;
-            virtualMouse.Y = (mouse.Y - (screenHeight * 2 - (screenHeight * scale)) * 0.5f) / scale;
+            virtualMouse.X = mouse.X / scale - screenWidth - 14.5f;
+            virtualMouse.Y = (mouse.Y - (screenHeight * 2 - (screenHeight * scale)) * 0.5f) / scale - 27;
 
             Vector2 max = new Vector2((float)screenWidth, (float)screenHeight);
             virtualMouse = Vector2.Clamp(virtualMouse, Vector2.Zero, max);
             return virtualMouse;
+        }
+
+        internal virtual void DrawMain()
+        {
         }
 
         protected void DrawRot13AnimatedTextEx(string text, int timing, int x, int y, int size, Color color)
@@ -89,6 +99,20 @@ namespace Rex2
         {
             var width = Raylib.MeasureText(m, fontSize);
             Raylib.DrawText(m, (screenWidth - width) / 2, y, fontSize, color);
+        }
+
+        protected void DrawDialogText(string m, Color color)
+        {
+            const int fontSize = 20;
+            var width = Raylib.MeasureText(m, fontSize);
+            //Raylib.DrawText(m, (screenWidth - width) / 2, y, fontSize, color);
+            Raylib.DrawText(m, 9 + (628 - (width) / 2), 344 * (int)scale, fontSize, color);
+        }
+
+        protected void DrawRemainingTime(int seconds)
+        {
+            const int fontSize = 19;
+            Raylib.DrawText(seconds.ToString(), 315 * (int)scale, 7 * (int)scale, fontSize, Color.GOLD);
         }
 
         protected void DrawRectangledTextEx(Rectangle container, string text, int fontSize, Color borderColor, Color textColor)

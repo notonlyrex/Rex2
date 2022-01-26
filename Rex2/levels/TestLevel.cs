@@ -8,6 +8,9 @@ namespace Rex2
 {
     internal class TestLevel : LevelBase
     {
+        private Dictionary<string, bool> dialogue = new Dictionary<string, bool>();
+        private int lastDialogue = 0;
+
         private void UpdateCameraCenter(ref Camera2D camera, ref Player player, Platform[] envItems, float delta, int width, int height)
         {
             camera.offset = new Vector2(width / 2, height / 2);
@@ -59,16 +62,20 @@ namespace Rex2
 
         private const float PLAYER_JUMP_SPD = 350.0f;
         private const float PLAYER_HOR_SPD = 200.0f;
+        private Vector2 origin;
         private Platform[] envItems;
         private Camera2D camera;
         private Player player;
+        private int elapsedTime;
+        private int levelTime = 99;
 
-        public TestLevel(int screenHeight, int screenWidth, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
+        public TestLevel(int screenHeight, int screenWidth, Vector2 origin, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
             player = new Player();
             player.position = new Vector2(400, 280);
             player.speed = 0;
             player.canJump = false;
+            this.origin = origin;
 
             envItems = new Platform[] {
                 new Platform(new Rectangle(0, 0, 1000, 400), 0, LIGHTGRAY),
@@ -85,6 +92,16 @@ namespace Rex2
             camera.zoom = 1.0f;
 
             framesCounter = 0;
+
+            elapsedTime = 0;
+
+            timerCallback = UpdateTime;
+            timer = new Timer(timerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+        }
+
+        private void UpdateTime(object? state)
+        {
+            elapsedTime++;
         }
 
         public override void Update(float deltaTime)
@@ -142,6 +159,7 @@ namespace Rex2
             Vector2 virtualMouse = GetVirtualMouse();
 
             Vector2 pos = new Vector2(10.0f, 10.0f);
+            Vector2 pos2 = pos + origin;
             Vector2 size = new Vector2(10.0f, 10.0f);
 
             DrawText($"{virtualMouse.X}, {virtualMouse.Y}", 0, 0, 10, GOLD);
@@ -175,6 +193,14 @@ namespace Rex2
         {
             for (int i = 0; i < envItems.Length; i++)
                 DrawRectangleRec(envItems[i].rect, envItems[i].color);
+        }
+
+        internal override void DrawMain()
+        {
+            base.DrawMain();
+
+            DrawDialogText("This is some kind of a very long dialogue text.", BLUE);
+            DrawRemainingTime(levelTime - elapsedTime);
         }
 
         public override void Unload()
