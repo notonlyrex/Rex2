@@ -8,9 +8,6 @@ namespace Rex2
 {
     internal class TestLevel : LevelBase
     {
-        private Dictionary<string, bool> dialogue = new Dictionary<string, bool>();
-        private int lastDialogue = 0;
-
         private void UpdateCameraCenter(ref Camera2D camera, ref Player player, Platform[] envItems, float delta, int width, int height)
         {
             camera.offset = new Vector2(width / 2, height / 2);
@@ -68,6 +65,7 @@ namespace Rex2
         private Player player;
         private int elapsedTime;
         private int levelTime = 99;
+        private DialogueManager dialogueManager;
 
         public TestLevel(int screenHeight, int screenWidth, Vector2 origin, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
@@ -95,6 +93,7 @@ namespace Rex2
 
             elapsedTime = 0;
 
+            dialogueManager = new DialogueManager();
             timerCallback = UpdateTime;
             timer = new Timer(timerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
@@ -102,6 +101,7 @@ namespace Rex2
         private void UpdateTime(object? state)
         {
             elapsedTime++;
+            dialogueManager.UpdateDialogueOnTime(elapsedTime);
         }
 
         public override void Update(float deltaTime)
@@ -199,7 +199,7 @@ namespace Rex2
         {
             base.DrawMain();
 
-            DrawDialogText("This is some kind of a very long dialogue text.", BLUE);
+            DrawDialogueText(dialogueManager.DisplayedDialogue.Text, dialogueManager.DisplayedDialogue.IsNorma ? BLUE : RED);
             DrawRemainingTime(levelTime - elapsedTime);
         }
 

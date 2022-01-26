@@ -101,11 +101,10 @@ namespace Rex2
             Raylib.DrawText(m, (screenWidth - width) / 2, y, fontSize, color);
         }
 
-        protected void DrawDialogText(string m, Color color)
+        protected void DrawDialogueText(string m, Color color)
         {
             const int fontSize = 20;
             var width = Raylib.MeasureText(m, fontSize);
-            //Raylib.DrawText(m, (screenWidth - width) / 2, y, fontSize, color);
             Raylib.DrawText(m, 9 + (628 - (width) / 2), 344 * (int)scale, fontSize, color);
         }
 
