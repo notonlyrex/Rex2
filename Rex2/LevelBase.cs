@@ -13,6 +13,31 @@ namespace Rex2
         public int Ammo { get; set; }
     }
 
+    internal class Enemy
+    {
+        public int HP { get; set; }
+        public Rectangle Rect { get; set; }
+    }
+
+    internal class Powerup
+    {
+        public Rectangle Rect { get; set; }
+    }
+
+    internal class LevelDefinition
+    {
+        public List<Platform> Platforms { get; set; }
+        public List<Enemy> Enemies { get; set; }
+        public List<Powerup> Powerups { get; set; }
+
+        public LevelDefinition()
+        {
+            Platforms = new List<Platform>();
+            Enemies = new List<Enemy>();
+            Powerups = new List<Powerup>();
+        }
+    }
+
     internal class Platform
     {
         public Rectangle Rect { get; set; }

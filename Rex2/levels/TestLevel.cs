@@ -8,7 +8,7 @@ namespace Rex2
 {
     internal class TestLevel : LevelBase
     {
-        private void UpdateCameraCenter(ref Camera2D camera, ref Player player, Platform[] envItems, float delta, int width, int height)
+        private void UpdateCameraCenter(ref Camera2D camera, ref Player player, IEnumerable<Platform> envItems, float delta, int width, int height)
         {
             camera.offset = new Vector2(width / 2, height / 2);
             camera.target = player.Position;
@@ -19,7 +19,8 @@ namespace Rex2
         private float PLAYER_JUMP_SPD = 350.0f;
         private float PLAYER_HOR_SPD = 200.0f;
         private Vector2 origin;
-        private Platform[] envItems;
+        private LevelDefinition level;
+
         private Camera2D camera;
         private Player player;
 
@@ -33,14 +34,7 @@ namespace Rex2
             player.CanJump = false;
             this.origin = origin;
 
-            //envItems = new Platform[] {
-            //    new Platform(new Rectangle(0, 400, 1000, 200), true, GRAY),
-            //    new Platform(new Rectangle(300, 200, 400, 10), true, GRAY),
-            //    new Platform(new Rectangle(250, 300, 100, 10), true, GRAY),
-            //    new Platform(new Rectangle(650, 300, 100, 10), true, GRAY)
-            //};
-
-            envItems = LevelParser.Parse("levels/testlevel.txt").ToArray();
+            level = LevelParser.Parse("levels/testlevel.txt");
 
             camera = new Camera2D();
             camera.target = player.Position;
@@ -98,9 +92,9 @@ namespace Rex2
             }
 
             int hitObstacle = 0;
-            for (int i = 0; i < envItems.Length; i++)
+            for (int i = 0; i < level.Platforms.Count; i++)
             {
-                Platform ei = envItems[i];
+                Platform ei = level.Platforms[i];
                 Vector2 p = player.Position;
                 if (ei.Blocking &&
                     ei.Rect.x <= p.X &&
@@ -122,7 +116,7 @@ namespace Rex2
             }
             else
                 player.CanJump = true;
-            UpdateCameraCenter(ref camera, ref player, envItems, deltaTime, screenWidth, screenHeight);
+            UpdateCameraCenter(ref camera, ref player, level.Platforms, deltaTime, screenWidth, screenHeight);
         }
 
         private void EnableHighJump()
@@ -139,6 +133,7 @@ namespace Rex2
             BeginMode2D(camera);
 
             RenderPlatforms();
+            RenderEnemies();
             RenderPlayer();
             EndMode2D();
 
@@ -166,7 +161,6 @@ namespace Rex2
             Vector2 virtualMouse = GetVirtualMouse();
 
             Vector2 pos = new Vector2(10.0f, 10.0f);
-            Vector2 pos2 = pos + origin;
             Vector2 size = new Vector2(10.0f, 10.0f);
 
             DrawText($"{virtualMouse.X}, {virtualMouse.Y}", 0, 0, 10, GOLD);
@@ -198,8 +192,18 @@ namespace Rex2
 
         private void RenderPlatforms()
         {
-            for (int i = 0; i < envItems.Length; i++)
-                DrawRectangleRec(envItems[i].Rect, envItems[i].Color);
+            foreach (var item in level.Platforms)
+            {
+                DrawRectangleRec(item.Rect, item.Color);
+            }
+        }
+
+        private void RenderEnemies()
+        {
+            foreach (var item in level.Enemies)
+            {
+                DrawRectangleRec(item.Rect, GOLD);
+            }
         }
 
         internal override void DrawMain()

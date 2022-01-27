@@ -1,11 +1,17 @@
 # komentarze znakiem #
 # X oznacza platforme
 # B oznacza platforme bazowa
+# e oznacza przeciwnika
+# E oznacza bossa
+# p oznacza znajdzke
+#
 # spacjami mozna wyrownywac, sa ignorowane
 # kazda linia i kazda kolumna to 20 pikseli
 # liczy sie od dolu
 #
 
+                           e
+                           X
 
                   XX               XXXX
 
