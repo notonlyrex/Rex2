@@ -11,48 +11,7 @@ namespace Rex2
         private void UpdateCameraCenter(ref Camera2D camera, ref Player player, Platform[] envItems, float delta, int width, int height)
         {
             camera.offset = new Vector2(width / 2, height / 2);
-            camera.target = player.position;
-        }
-
-        private void UpdatePlayer(ref Player player, Platform[] envItems, float delta)
-        {
-            if (IsKeyDown(KEY_LEFT))
-                player.position.X -= PLAYER_HOR_SPD * delta;
-
-            if (IsKeyDown(KEY_RIGHT))
-                player.position.X += PLAYER_HOR_SPD * delta;
-
-            if (IsKeyDown(KEY_SPACE) && player.canJump)
-            {
-                player.speed = -PLAYER_JUMP_SPD;
-                player.canJump = false;
-            }
-
-            int hitObstacle = 0;
-            for (int i = 0; i < envItems.Length; i++)
-            {
-                Platform ei = envItems[i];
-                Vector2 p = player.position;
-                if (ei.blocking != 0 &&
-                    ei.rect.x <= p.X &&
-                    ei.rect.x + ei.rect.width >= p.X &&
-                    ei.rect.y >= p.Y &&
-                    ei.rect.y < p.Y + player.speed * delta)
-                {
-                    hitObstacle = 1;
-                    player.speed = 0.0f;
-                    player.position.Y = ei.rect.y;
-                }
-            }
-
-            if (hitObstacle == 0)
-            {
-                player.position.Y += player.speed * delta;
-                player.speed += G * delta;
-                player.canJump = false;
-            }
-            else
-                player.canJump = true;
+            camera.target = player.Position;
         }
 
         private const int G = 400;
@@ -63,16 +22,15 @@ namespace Rex2
         private Platform[] envItems;
         private Camera2D camera;
         private Player player;
-        private int elapsedTime;
-        private int levelTime = 99;
+
         private DialogueManager dialogueManager;
 
         public TestLevel(int screenHeight, int screenWidth, Vector2 origin, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
             player = new Player();
-            player.position = new Vector2(400, 280);
-            player.speed = 0;
-            player.canJump = false;
+            player.Position = new Vector2(400, 280);
+            player.Speed = 0;
+            player.CanJump = false;
             this.origin = origin;
 
             envItems = new Platform[] {
@@ -84,14 +42,14 @@ namespace Rex2
             };
 
             camera = new Camera2D();
-            camera.target = player.position;
+            camera.target = player.Position;
             camera.offset = new Vector2(screenWidth / 2, screenHeight / 2);
             camera.rotation = 0.0f;
             camera.zoom = 1.0f;
 
             framesCounter = 0;
 
-            elapsedTime = 0;
+            ElapsedTime = 0;
 
             dialogueManager = new DialogueManager();
             timerCallback = UpdateTime;
@@ -100,8 +58,8 @@ namespace Rex2
 
         private void UpdateTime(object? state)
         {
-            elapsedTime++;
-            dialogueManager.UpdateDialogueOnTime(elapsedTime);
+            ElapsedTime++;
+            dialogueManager.UpdateDialogue(this, player);
         }
 
         public override void Update(float deltaTime)
@@ -120,7 +78,43 @@ namespace Rex2
 
         private void UpdatePlayer1(float deltaTime)
         {
-            UpdatePlayer(ref player, envItems, deltaTime);
+            if (IsKeyDown(KEY_LEFT))
+                player.Position = new Vector2 { X = player.Position.X - PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
+
+            if (IsKeyDown(KEY_RIGHT))
+                player.Position = new Vector2 { X = player.Position.X + PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
+
+            if (IsKeyDown(KEY_SPACE) && player.CanJump)
+            {
+                player.Speed = -PLAYER_JUMP_SPD;
+                player.CanJump = false;
+            }
+
+            int hitObstacle = 0;
+            for (int i = 0; i < envItems.Length; i++)
+            {
+                Platform ei = envItems[i];
+                Vector2 p = player.Position;
+                if (ei.Blocking != 0 &&
+                    ei.Rect.x <= p.X &&
+                    ei.Rect.x + ei.Rect.width >= p.X &&
+                    ei.Rect.y >= p.Y &&
+                    ei.Rect.y < p.Y + player.Speed * deltaTime)
+                {
+                    hitObstacle = 1;
+                    player.Speed = 0.0f;
+                    player.Position = new Vector2 { X = player.Position.X, Y = ei.Rect.y };
+                }
+            }
+
+            if (hitObstacle == 0)
+            {
+                player.Position = new Vector2 { X = player.Position.X, Y = player.Position.Y + player.Speed * deltaTime };
+                player.Speed += G * deltaTime;
+                player.CanJump = false;
+            }
+            else
+                player.CanJump = true;
             UpdateCameraCenter(ref camera, ref player, envItems, deltaTime, screenWidth, screenHeight);
         }
 
@@ -185,14 +179,14 @@ namespace Rex2
 
         private void RenderPlayer()
         {
-            Rectangle playerRect = new Rectangle(player.position.X - 20, player.position.Y - 40, 40, 40);
+            Rectangle playerRect = new Rectangle(player.Position.X - 20, player.Position.Y - 40, 40, 40);
             DrawRectangleRec(playerRect, RED);
         }
 
         private void RenderPlatforms()
         {
             for (int i = 0; i < envItems.Length; i++)
-                DrawRectangleRec(envItems[i].rect, envItems[i].color);
+                DrawRectangleRec(envItems[i].Rect, envItems[i].Color);
         }
 
         internal override void DrawMain()
@@ -200,7 +194,7 @@ namespace Rex2
             base.DrawMain();
 
             DrawDialogueText(dialogueManager.DisplayedDialogue.Text, dialogueManager.DisplayedDialogue.IsNorma ? BLUE : RED);
-            DrawRemainingTime(levelTime - elapsedTime);
+            DrawRemainingTime(LevelTime - ElapsedTime);
         }
 
         public override void Unload()

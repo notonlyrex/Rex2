@@ -3,24 +3,25 @@ using System.Numerics;
 
 namespace Rex2
 {
-    internal struct Player
+    internal class Player
     {
-        public Vector2 position;
-        public float speed;
-        public bool canJump;
+        public Vector2 Position { get; set; }
+        public float Speed { get; set; }
+        public bool CanJump { get; set; }
     }
 
-    internal struct Platform
+    internal class Platform
     {
-        public Rectangle rect;
-        public int blocking;
-        public Color color;
+        public Rectangle Rect { get; set; }
+        public int Blocking { get; set; }
+        public Color Color { get; set; }
+        public int Durability { get; set; }
 
         public Platform(Rectangle rect, int blocking, Color color)
         {
-            this.rect = rect;
-            this.blocking = blocking;
-            this.color = color;
+            this.Rect = rect;
+            this.Blocking = blocking;
+            this.Color = color;
         }
     }
 
@@ -36,6 +37,9 @@ namespace Rex2
         protected int framesCounter;
         protected Timer timer;
         protected TimerCallback timerCallback;
+
+        public int ElapsedTime { get; protected set; }
+        public int LevelTime { get; protected set; } = 99;
 
         public LevelBase(int screenHeight, int screenWidth, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2)
         {
