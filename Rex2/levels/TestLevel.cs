@@ -18,8 +18,9 @@ namespace Rex2
 
         private float PLAYER_JUMP_SPD = 350.0f;
         private float PLAYER_HOR_SPD = 200.0f;
-        private Vector2 origin;
+
         private LevelDefinition level;
+        private Match3 norma;
 
         private Camera2D camera;
         private Player player;
@@ -32,7 +33,6 @@ namespace Rex2
             player.Position = new Vector2(400, 280);
             player.Speed = 0;
             player.CanJump = false;
-            this.origin = origin;
 
             level = LevelParser.Parse("levels/testlevel.txt");
 
@@ -47,6 +47,9 @@ namespace Rex2
             ElapsedTime = 0;
 
             dialogueManager = new DialogueManager();
+
+            norma = new Match3();
+
             timerCallback = UpdateTime;
             timer = new Timer(timerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
@@ -160,20 +163,28 @@ namespace Rex2
 
             Vector2 virtualMouse = GetVirtualMouse();
 
-            Vector2 pos = new Vector2(10.0f, 10.0f);
-            Vector2 size = new Vector2(10.0f, 10.0f);
-
             DrawText($"{virtualMouse.X}, {virtualMouse.Y}", 0, 0, 10, GOLD);
 
-            Rectangle emojiRect = new Rectangle(pos.X, pos.Y, size.X, size.Y);
+            //Rectangle emojiRect = new Rectangle(pos.X, pos.Y, size.X, size.Y);
 
-            if (CheckCollisionPointRec(virtualMouse, emojiRect))
+            for (int i = 0; i < norma.Grid.GetLength(0); i++)
             {
-                DrawRectangle((int)emojiRect.x, (int)emojiRect.y, (int)emojiRect.width, (int)emojiRect.height, RED);
-            }
-            else
-            {
-                DrawRectangle((int)emojiRect.x, (int)emojiRect.y, (int)emojiRect.width, (int)emojiRect.height, BLUE);
+                for (int j = 0; j < norma.Grid.GetLength(1); j++)
+                {
+                    var g = norma.Grid[i, j];
+
+                    g.Hover = CheckCollisionPointRec(virtualMouse, g.Rect);
+
+                    Color c = RED;
+
+                    if (g.Active)
+                        c = GREEN;
+
+                    if (g.Hover)
+                        c = BLUE;
+
+                    DrawRectangle((int)g.Rect.x, (int)g.Rect.y, (int)g.Rect.width, (int)g.Rect.height, c);
+                }
             }
         }
 
