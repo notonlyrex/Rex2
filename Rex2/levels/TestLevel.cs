@@ -16,8 +16,8 @@ namespace Rex2
 
         private const int G = 400;
 
-        private const float PLAYER_JUMP_SPD = 350.0f;
-        private const float PLAYER_HOR_SPD = 200.0f;
+        private float PLAYER_JUMP_SPD = 350.0f;
+        private float PLAYER_HOR_SPD = 200.0f;
         private Vector2 origin;
         private Platform[] envItems;
         private Camera2D camera;
@@ -78,16 +78,22 @@ namespace Rex2
 
         private void UpdatePlayer1(float deltaTime)
         {
-            if (IsKeyDown(KEY_LEFT))
+            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
                 player.Position = new Vector2 { X = player.Position.X - PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
 
-            if (IsKeyDown(KEY_RIGHT))
+            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
                 player.Position = new Vector2 { X = player.Position.X + PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
 
-            if (IsKeyDown(KEY_SPACE) && player.CanJump)
+            if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_W)) && player.CanJump)
             {
                 player.Speed = -PLAYER_JUMP_SPD;
+
                 player.CanJump = false;
+            }
+
+            if (IsKeyDown(KEY_F1))
+            {
+                EnableHighJump();
             }
 
             int hitObstacle = 0;
@@ -116,6 +122,12 @@ namespace Rex2
             else
                 player.CanJump = true;
             UpdateCameraCenter(ref camera, ref player, envItems, deltaTime, screenWidth, screenHeight);
+        }
+
+        private void EnableHighJump()
+        {
+            PLAYER_JUMP_SPD = PLAYER_JUMP_SPD + 10;
+            dialogueManager.UpdateDialogueOnSituation(Situation.HighJump);
         }
 
         private void Draw()

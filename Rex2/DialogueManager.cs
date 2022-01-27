@@ -25,7 +25,9 @@
         private List<Dialogue> outOfTime;
         private List<Dialogue> useAparatus;
         private List<Dialogue> takeShiny;
+        private List<Dialogue> lowHp;
         private List<Dialogue> jump;
+        private List<Dialogue> highJump;
         private List<Dialogue> almost;
         private List<Dialogue> boss;
         private List<Dialogue> megabuff;
@@ -120,6 +122,7 @@
             quantum = new List<Dialogue>() {
                 new Dialogue { Text = "It's dangerous to go alone, take this.", IsNorma = true },
                 new Dialogue { Text = "[Rex received QUANTUM APPARATUS]", IsNorma = false },
+                new Dialogue { Text = "Now you can press ", IsNorma = false },
                 empty
             };
 
@@ -137,8 +140,16 @@
                 new Dialogue { Text = "Take that shiny thing! I'm out of energy!", IsNorma = true }
             };
 
+            lowHp = new List<Dialogue>() {
+                new Dialogue { Text = "Rex, I will kill you if you die!", IsNorma = true }
+            };
+
             jump = new List<Dialogue>() {
                 new Dialogue { Text = "Rex, jump off this platform NOW!", IsNorma = true },
+            };
+
+            highJump = new List<Dialogue>() {
+                new Dialogue { Text = "You can jump higher now!", IsNorma = true },
             };
 
             almost = new List<Dialogue>() {
@@ -183,8 +194,14 @@
         {
             if (level.LevelTime - level.ElapsedTime < 30)
             {
-                currentSequence = outOfTime;
-                dialogueIndex = 0;
+                UpdateDialogueOnSituation(Situation.OutOfTime);
+                return;
+            }
+
+            if (player.HP < 2)
+            {
+                UpdateDialogueOnSituation(Situation.LowHP);
+                return;
             }
 
             if (level.ElapsedTime - dialogueShowTime >= DisplayedDialogue.Time)
@@ -212,8 +229,33 @@
             }
         }
 
-        public void UpdateDialogueOnSituation(Player p)
+        public void UpdateDialogueOnSituation(Situation s)
         {
+            switch (s)
+            {
+                case Situation.HighJump:
+                    currentSequence = highJump;
+                    break;
+
+                case Situation.LowNormaEnergy:
+                    currentSequence = takeShiny;
+                    break;
+
+                case Situation.LowHP:
+                    currentSequence = lowHp;
+                    break;
+
+                case Situation.OutOfTime:
+                    currentSequence = outOfTime;
+                    break;
+
+                default:
+                    currentSequence = doingGreat;
+                    break;
+            }
+
+            displayedDialogue = currentSequence[0];
+            dialogueIndex = 0;
         }
 
         public Dialogue DisplayedDialogue
@@ -221,5 +263,13 @@
             get { return displayedDialogue; }
             private set { displayedDialogue = value; }
         }
+    }
+
+    public enum Situation
+    {
+        HighJump,
+        LowHP,
+        LowNormaEnergy,
+        OutOfTime
     }
 }
