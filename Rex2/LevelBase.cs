@@ -16,11 +16,15 @@ namespace Rex2
     internal class Platform
     {
         public Rectangle Rect { get; set; }
-        public int Blocking { get; set; }
+        public bool Blocking { get; set; }
         public Color Color { get; set; }
         public int Durability { get; set; }
 
-        public Platform(Rectangle rect, int blocking, Color color)
+        public Platform()
+        {
+        }
+
+        public Platform(Rectangle rect, bool blocking, Color color)
         {
             this.Rect = rect;
             this.Blocking = blocking;

@@ -33,13 +33,14 @@ namespace Rex2
             player.CanJump = false;
             this.origin = origin;
 
-            envItems = new Platform[] {
-                new Platform(new Rectangle(0, 0, 1000, 400), 0, LIGHTGRAY),
-                new Platform(new Rectangle(0, 400, 1000, 200), 1, GRAY),
-                new Platform(new Rectangle(300, 200, 400, 10), 1, GRAY),
-                new Platform(new Rectangle(250, 300, 100, 10), 1, GRAY),
-                new Platform(new Rectangle(650, 300, 100, 10), 1, GRAY)
-            };
+            //envItems = new Platform[] {
+            //    new Platform(new Rectangle(0, 400, 1000, 200), true, GRAY),
+            //    new Platform(new Rectangle(300, 200, 400, 10), true, GRAY),
+            //    new Platform(new Rectangle(250, 300, 100, 10), true, GRAY),
+            //    new Platform(new Rectangle(650, 300, 100, 10), true, GRAY)
+            //};
+
+            envItems = LevelParser.Parse("levels/testlevel.txt").ToArray();
 
             camera = new Camera2D();
             camera.target = player.Position;
@@ -101,7 +102,7 @@ namespace Rex2
             {
                 Platform ei = envItems[i];
                 Vector2 p = player.Position;
-                if (ei.Blocking != 0 &&
+                if (ei.Blocking &&
                     ei.Rect.x <= p.X &&
                     ei.Rect.x + ei.Rect.width >= p.X &&
                     ei.Rect.y >= p.Y &&

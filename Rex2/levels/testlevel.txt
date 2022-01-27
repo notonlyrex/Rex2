@@ -1,21 +1,29 @@
-# file header
-18,20,1,3  # 18 rows, 20 columns, player in position 1,3
-XXXXDDXXXX # DD are doors
-XFFFFFFFFX
-XFFFFFFFFX
-XFFFFFFFFXXXXXXXXXX
-XFFFFFFFFFFFFFFFFFX
-XFFFFFFFFFFFFFFFFFX
-XFFFFFFFFXXXXXXXFFX
-XFFFFFFFFXXXXXXXFFX
-XFFFFFFFFFFFFFFFFFFX
-XXXXFF  FFFFFFFFFFFX
-XXXXFFXXXXXXXXXXXFFX
-XXXXFFXXXX      XFFX
-XXXXFFXXXX      XDDX
-XXXXFFXXXX      XXXX
-XXXXFFXXXXXXXXXXXFFX
-XXXXFFFFFFFFFFFFFFFX
-XXXXFFFFFFFFFFFFFFFX
-XXXXXXXXXXXXXXXXXXXX
-0,10,5,0,0,0,0 # barrel at 10,5,0 position, with rotation 0,0,0
+# komentarze znakiem #
+# X oznacza platforme
+# B oznacza platforme bazowa
+# spacjami mozna wyrownywac, sa ignorowane
+# kazda linia i kazda kolumna to 20 pikseli
+# liczy sie od dolu
+#
+
+
+                  XX               XXXX
+
+
+
+           XXXXX       XX   XX     XX
+
+
+
+
+                XXXXXXXXXXXXXXXXXXXX
+
+
+
+
+           XXXXX                   XXXXX
+
+
+
+
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
