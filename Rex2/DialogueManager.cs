@@ -192,13 +192,13 @@
 
         public void UpdateDialogue(LevelBase level, Player player)
         {
-            if (level.LevelTime - level.ElapsedTime < 30)
+            if (level.LevelTime - level.ElapsedTime < 30 && currentSequence != outOfTime)
             {
                 UpdateDialogueOnSituation(Situation.OutOfTime);
                 return;
             }
 
-            if (player.HP < 2)
+            if (player.HP < 2 && currentSequence != lowHp)
             {
                 UpdateDialogueOnSituation(Situation.LowHP);
                 return;

@@ -20,12 +20,14 @@ namespace Rex2
         private float PLAYER_HOR_SPD = 200.0f;
 
         private LevelDefinition level;
-        private Match3 norma;
+        private Norma norma;
 
         private Camera2D camera;
         private Player player;
 
         private DialogueManager dialogueManager;
+
+        private Texture2D jewel;
 
         public TestLevel(int screenHeight, int screenWidth, Vector2 origin, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
@@ -48,10 +50,35 @@ namespace Rex2
 
             dialogueManager = new DialogueManager();
 
-            norma = new Match3();
+            norma = new Norma();
+            norma.GiveBuff += BuffPlayer;
 
             timerCallback = UpdateTime;
             timer = new Timer(timerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
+            jewel = LoadTexture("assets/jewel.png");
+        }
+
+        private void BuffPlayer(TileType t)
+        {
+            switch (t)
+            {
+                case TileType.GREEN:
+                    if (player.HP < 4) player.HP++;
+                    break;
+
+                case TileType.RED:
+                    if (player.Shield < 4) player.Shield++;
+                    break;
+
+                case TileType.YELLOW:
+                    if (player.Ammo < 4) player.Ammo++;
+                    break;
+
+                case TileType.WHITE:
+                    EnableHighJump();
+                    break;
+            }
         }
 
         private void UpdateTime(object? state)
@@ -155,35 +182,72 @@ namespace Rex2
 
         private void RenderPlayer2()
         {
-            DrawRot13AnimatedText("Wake up, Rex!", 10, 0, 220, 14, MAGENTA);
+            //DrawRot13AnimatedText("Wake up, Rex!", 10, 0, 220, 14, MAGENTA);
             //DrawCenteredText("Zażółć gęślą jaźń", 50, 18, GREEN);
-            DrawRectangledTextEx(new Rectangle(20, 20, 120, 120), "This is a longer text with wrapping.", 14, DARKGREEN, GRAY);
+            //DrawRectangledTextEx(new Rectangle(20, 20, 120, 120), "This is a longer text with wrapping.", 14, DARKGREEN, GRAY);
 
             //DrawRectangle(0, 0, 319, 10, RED);
 
             Vector2 virtualMouse = GetVirtualMouse();
 
-            DrawText($"{virtualMouse.X}, {virtualMouse.Y}", 0, 0, 10, GOLD);
+            //DrawText($"{virtualMouse.X}, {virtualMouse.Y}", 0, 0, 10, GOLD);
 
-            //Rectangle emojiRect = new Rectangle(pos.X, pos.Y, size.X, size.Y);
-
-            for (int i = 0; i < norma.Grid.GetLength(0); i++)
+            for (int i = 0; i < norma.Board.sizeX; i++)
             {
-                for (int j = 0; j < norma.Grid.GetLength(1); j++)
+                for (int j = 0; j < norma.Board.sizeY; j++)
                 {
-                    var g = norma.Grid[i, j];
+                    var g = norma.Board.Grid[i, j];
 
-                    g.Hover = CheckCollisionPointRec(virtualMouse, g.Rect);
+                    if (g == null)
+                        continue;
 
-                    Color c = RED;
+                    if (CheckCollisionPointRec(virtualMouse, g.Rect))
+                    {
+                        if (!g.Hover)
+                        {
+                            g.Hover = true;
+                        }
 
-                    if (g.Active)
+                        if (IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && !g.Active)
+                        {
+                            norma.Board.MarkActive(i, j);
+                        }
+                    }
+                    else if (g.Hover)
+                    {
+                        g.Hover = false;
+                    }
+
+                    //if (IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON))
+                    //{
+                    //    if (g.Hover)
+                    //    {
+                    //        g.Active = true;
+                    //    }
+                    //}
+
+                    Color c = WHITE;
+
+                    if (g.type == TileType.RED)
+                        c = RED;
+                    else if (g.type == TileType.GREEN)
                         c = GREEN;
+                    else if (g.type == TileType.BLUE)
+                        c = BLUE;
+                    else if (g.type == TileType.WHITE)
+                        c = WHITE;
+                    else if (g.type == TileType.YELLOW)
+                        c = YELLOW;
 
                     if (g.Hover)
-                        c = BLUE;
+                        c = GOLD;
 
-                    DrawRectangle((int)g.Rect.x, (int)g.Rect.y, (int)g.Rect.width, (int)g.Rect.height, c);
+                    if (g.Active)
+                        c = BLACK;
+
+                    DrawTexture(jewel, (int)g.Rect.x, (int)g.Rect.y, c);
+
+                    //DrawRectangle((int)g.Rect.x, (int)g.Rect.y, (int)g.Rect.width, (int)g.Rect.height, c);
                 }
             }
         }
@@ -228,6 +292,8 @@ namespace Rex2
         public override void Unload()
         {
             base.Unload();
+
+            UnloadTexture(jewel);
         }
     }
 }
