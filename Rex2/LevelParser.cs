@@ -6,7 +6,7 @@
         Platform,
         Enemy,
         BossEnemy,
-        NormaEnergy
+        Powerup
     }
 
     internal class Template
@@ -102,6 +102,13 @@
                             p.X = j * 20;
                             p.Y = i * 20;
                         }
+                        else if (line[j] == 'p')
+                        {
+                            p = new Template();
+                            p.Type = TemplateType.Powerup;
+                            p.X = j * 20;
+                            p.Y = i * 20;
+                        }
                     }
                     else
                     {
@@ -145,7 +152,22 @@
                 case TemplateType.BossEnemy:
                     result.Enemies.Add(TemplateToEnemy(p));
                     break;
+
+                case TemplateType.Powerup:
+                    result.Powerups.Add(TemplateToPowerup(p));
+                    break;
             }
+        }
+
+        private static Powerup TemplateToPowerup(Template pt)
+        {
+            if (pt.Type != TemplateType.Powerup)
+                throw new ArgumentException("pt");
+
+            return new Powerup()
+            {
+                Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 10, height = 10 },
+            };
         }
     }
 }

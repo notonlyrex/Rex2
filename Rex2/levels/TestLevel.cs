@@ -158,6 +158,7 @@ namespace Rex2
 
             UpdateBullets(deltaTime);
             UpdateEnemies(deltaTime);
+            UpdatePowerups(deltaTime);
 
             if (IsKeyPressed(KEY_F1))
             {
@@ -260,6 +261,20 @@ namespace Rex2
             }
 
             UpdatePlayerOnEnemies();
+            UpdatePlayerOnPowerups();
+        }
+
+        private void UpdatePlayerOnPowerups()
+        {
+            // aktualizacja kolizji gracza z przeciwnikami
+            foreach (var item in level.Powerups)
+            {
+                if (CheckCollisionRecs(item.Rect, player.Rect))
+                {
+                    norma.Energy++;
+                    item.IsTaken = true;
+                }
+            }
         }
 
         private void UpdatePlayerOnEnemies()
@@ -300,6 +315,17 @@ namespace Rex2
 
             // usuwanie martwych
             level.Enemies.RemoveAll(x => x.HP <= 0);
+        }
+
+        private void UpdatePowerups(float deltaTime)
+        {
+            if (level.Powerups.Count(x => x.IsTaken) > 0)
+            {
+                AudioManager.Instance.Play(Sounds.Take);
+            }
+
+            // usuwanie wziętych
+            level.Powerups.RemoveAll(x => x.IsTaken);
         }
 
         private void UpdateBullets(float deltaTime)
@@ -344,6 +370,7 @@ namespace Rex2
             RenderPlatforms();
             RenderBullets();
             RenderEnemies();
+            RenderPowerups();
             RenderPlayer();
 
             EndMode2D();
@@ -359,6 +386,14 @@ namespace Rex2
             RenderPlayer2();
 
             EndTextureMode();
+        }
+
+        private void RenderPowerups()
+        {
+            foreach (var item in level.Powerups)
+            {
+                DrawCircle((int)item.Rect.x, (int)item.Rect.y, 10, VIOLET);
+            }
         }
 
         private void DrawResources()
