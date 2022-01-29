@@ -28,7 +28,7 @@ namespace Rex2.levels
         private void Draw()
         {
             BeginTextureMode(screenPlayer1);
-            ClearBackground(Color.LIGHTGRAY);
+            ClearBackground(Textures.Background);
 
             DrawAnimatedText("Code: Marcin \"Ktos\" Badurowicz", 10, 10, 10, 15, Color.RED);
             DrawRot13AnimatedText("Graphics: Stanislaw Skulimowski", 10, 10, 40, 15, Color.GREEN);
@@ -44,7 +44,7 @@ namespace Rex2.levels
             EndTextureMode();
 
             BeginTextureMode(screenPlayer2);
-            ClearBackground(Color.LIGHTGRAY);
+            ClearBackground(Textures.Background);
 
             foreach (var item in menu)
             {

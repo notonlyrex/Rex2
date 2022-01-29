@@ -20,7 +20,7 @@
         public TemplateType Type { get; set; }
     }
 
-    internal class LevelParser
+    internal static class LevelParser
     {
         private static Platform TemplateToPlatform(Template pt)
         {
@@ -207,7 +207,7 @@
 
             return new Powerup()
             {
-                Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 10, height = 10 },
+                Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 18, height = 18 },
             };
         }
     }

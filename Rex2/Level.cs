@@ -390,6 +390,7 @@ namespace Rex2
         {
             BeginTextureMode(screenPlayer1);
             ClearBackground(Textures.Background);
+            DrawTexture(Textures.BackgroundScreen1, 0, 0, WHITE);
 
             BeginMode2D(camera);
 
@@ -419,7 +420,7 @@ namespace Rex2
         {
             foreach (var item in level.Powerups)
             {
-                DrawCircle((int)item.Rect.x, (int)item.Rect.y, 10, VIOLET);
+                DrawTexturePro(Textures.Powerup, new Rectangle(0, 0, Textures.Powerup.width, Textures.Powerup.height), item.Rect, new Vector2(0, 0), 0, WHITE);
             }
         }
 

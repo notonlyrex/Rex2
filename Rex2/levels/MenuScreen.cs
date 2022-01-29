@@ -72,7 +72,7 @@ namespace Rex2.levels
         private void Draw()
         {
             BeginTextureMode(screenPlayer1);
-            ClearBackground(Color.LIGHTGRAY);
+            ClearBackground(Textures.Background);
 
             for (int i = 0; i < introIndex; i++)
             {
@@ -83,7 +83,7 @@ namespace Rex2.levels
             EndTextureMode();
 
             BeginTextureMode(screenPlayer2);
-            ClearBackground(Color.LIGHTGRAY);
+            ClearBackground(Textures.Background);
 
             foreach (var item in menu)
             {
