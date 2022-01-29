@@ -6,7 +6,7 @@ using static Raylib_cs.Raylib;
 
 namespace Rex2
 {
-    internal class TestLevel : LevelBase
+    internal class Level : LevelBase
     {
         private void UpdateCameraCenter(ref Camera2D camera, ref Player player, IEnumerable<Platform> envItems, float delta, int width, int height)
         {
@@ -31,14 +31,14 @@ namespace Rex2
 
         private bool seenBoss = false;
 
-        public TestLevel(int screenHeight, int screenWidth, Vector2 origin, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
+        public Level(int screenHeight, int screenWidth, bool showIntro, string fileName, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
             player = new Player();
             player.Position = new Vector2(400, 280);
             player.Speed = 0;
             player.CanJump = false;
 
-            level = LevelParser.Parse("levels/testlevel.txt");
+            level = LevelParser.Parse($"levels/{fileName}.txt");
 
             camera = new Camera2D();
             camera.target = player.Position;
@@ -61,6 +61,11 @@ namespace Rex2
             timer.AutoReset = true;
 
             jewel = LoadTexture("assets/jewel.png");
+
+            if (!showIntro)
+            {
+                seenBoss = true;
+            }
         }
 
         private void BuffPlayer(TileType t, int count)
@@ -160,6 +165,7 @@ namespace Rex2
             UpdateEnemies(deltaTime);
             UpdatePowerups(deltaTime);
 
+#if DEBUG
             if (IsKeyPressed(KEY_F1))
             {
                 EnableHighJump();
@@ -193,6 +199,7 @@ namespace Rex2
             {
                 BuffPlayer(TileType.GREEN, 6);
             }
+#endif
 
             UpdatePlayerOnPlatforms(deltaTime);
             UpdateCameraCenter(ref camera, ref player, level.Platforms, deltaTime, screenWidth, screenHeight);
@@ -375,8 +382,9 @@ namespace Rex2
 
             EndMode2D();
 
-            RenderHelp();
+#if DEBUG
             DrawText($"FPS: {GetFPS()}", 0, 0, 10, GOLD);
+#endif
 
             EndTextureMode();
 

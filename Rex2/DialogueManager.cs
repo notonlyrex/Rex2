@@ -203,7 +203,8 @@
             randomSequences = randomSequences.OrderBy(_ => r.Next()).ToList();
             currentSequenceIndex = 0;
             //UpdateCurrentSequence();
-            UpdateDialogueOnSituation(Situation.Introduction);
+
+            UpdateDialogueOnSituation(Situation.Introduction, true);
         }
 
         public List<Dialogue> Introduction()
@@ -275,9 +276,11 @@
             }
         }
 
-        public void UpdateDialogueOnSituation(Situation s)
+        public void UpdateDialogueOnSituation(Situation s, bool silent = false)
         {
-            AudioManager.Instance.Play(Sounds.ImportantDialogue);
+            if (!silent)
+                AudioManager.Instance.Play(Sounds.ImportantDialogue);
+
             switch (s)
             {
                 case Situation.HighJump:

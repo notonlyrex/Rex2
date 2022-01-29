@@ -18,6 +18,9 @@ namespace Rex2
             const int scale = 2;
 
             InitWindow(gameWidth * scale, gameHeight * scale, "Rex2");
+#if !DEBUG
+            SetWindowState(ConfigFlags.FLAG_FULLSCREEN_MODE);
+#endif
             SetTargetFPS(60);
             RenderTexture2D screenPlayer1 = LoadRenderTexture(screenWidth, screenHeight);
             RenderTexture2D screenPlayer2 = LoadRenderTexture(screenWidth, screenHeight);
@@ -30,42 +33,47 @@ namespace Rex2
             Rectangle chevroSrc = new Rectangle(0, 0, chevron.width, chevron.height);
             Rectangle chevroDest = new Rectangle(468 * scale, 330 * scale, 22 * scale, 12 * scale);
 
-            TestLevel test = new TestLevel(screenHeight, screenWidth, new Vector2(324, 27), ref screenPlayer1, ref screenPlayer2);
+            Level first = new Level(screenHeight, screenWidth, true, "testlevel", ref screenPlayer1, ref screenPlayer2);
             LogoScreen logo = new LogoScreen(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2);
             WinScreen win = new WinScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
             LoseScreen lose = new LoseScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
             MenuScreen menu = new MenuScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
+            CreditsScreen credits = new CreditsScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
 
-            LevelManager levelManager = new LevelManager(logo, menu, lose, win);
-            levelManager.Add(test);
+            LevelManager levelManager = new LevelManager(logo, menu, lose, win, credits);
+            levelManager.Add(first);
             levelManager.Menu();
 
-            while (!WindowShouldClose())
+            try
             {
-                float deltaTime = GetFrameTime();
+                while (!WindowShouldClose())
+                {
+                    float deltaTime = GetFrameTime();
 
-                levelManager.Current.Update(deltaTime);
+                    levelManager.Current.Update(deltaTime);
 
-                BeginDrawing();
-                ClearBackground(BLACK);
+                    BeginDrawing();
+                    ClearBackground(BLACK);
 
-                DrawTextureEx(baseTexture, Vector2.Zero, 0, 2, WHITE);
-                DrawTexturePro(screenPlayer1.texture, sourceRec, destRec, new Vector2(0, 0), 0.0f, WHITE);
-                DrawTexturePro(screenPlayer2.texture, sourceRec, destRec2, new Vector2(0, 0), 0.0f, WHITE);
+                    DrawTextureEx(baseTexture, Vector2.Zero, 0, 2, WHITE);
+                    DrawTexturePro(screenPlayer1.texture, sourceRec, destRec, new Vector2(0, 0), 0.0f, WHITE);
+                    DrawTexturePro(screenPlayer2.texture, sourceRec, destRec2, new Vector2(0, 0), 0.0f, WHITE);
 
-                levelManager.Current.DrawMain();
+                    levelManager.Current.DrawMain();
 
-                DrawTexturePro(chevron, chevroSrc, chevroDest, new Vector2(0, 0), 0, WHITE);
+                    DrawTexturePro(chevron, chevroSrc, chevroDest, new Vector2(0, 0), 0, WHITE);
 
-                EndDrawing();
+                    EndDrawing();
+                }
             }
-
-            UnloadRenderTexture(screenPlayer1);
-            UnloadRenderTexture(screenPlayer2);
-            UnloadTexture(baseTexture);
-            levelManager.Current.Unload();
-
-            CloseWindow();
+            catch (AccessViolationException) { }
+            finally
+            {
+                UnloadRenderTexture(screenPlayer1);
+                UnloadRenderTexture(screenPlayer2);
+                UnloadTexture(baseTexture);
+                levelManager.Current.Unload();
+            }
         }
     }
 }

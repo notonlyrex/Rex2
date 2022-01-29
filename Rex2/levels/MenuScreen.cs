@@ -3,10 +3,19 @@ using static Raylib_cs.Raylib;
 
 namespace Rex2.levels
 {
+    internal class MenuOption
+    {
+        public Rectangle Rect { get; set; }
+        public string Text { get; set; }
+        public Action Action { get; set; }
+    }
+
     internal class MenuScreen : LevelBase
     {
         private List<Dialogue> intro;
         private int introIndex = 0;
+
+        private List<MenuOption> menu = new List<MenuOption>();
 
         public MenuScreen(int screenHeight, int screenWidth, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
@@ -17,6 +26,10 @@ namespace Rex2.levels
 
             var dm = new DialogueManager();
             intro = dm.Introduction();
+
+            menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 10, width = 200, height = 50 }, Text = "Start game", Action = () => LevelManager.Instance.Next() });
+            menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 70, width = 200, height = 50 }, Text = "Credits", Action = () => LevelManager.Instance.Credits() });
+            menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 130, width = 200, height = 50 }, Text = "Exit", Action = () => CloseWindow() });
         }
 
         public override void Start()
@@ -61,17 +74,31 @@ namespace Rex2.levels
             BeginTextureMode(screenPlayer1);
             ClearBackground(Color.LIGHTGRAY);
 
-            DrawText($"FPS: {GetFPS()}", 0, 0, 10, Color.GOLD);
+            for (int i = 0; i < introIndex; i++)
+            {
+                var t = intro[i];
+                DrawText(t.Text, 10, 15 * (i + 1), 10, t.IsNorma ? Color.BLUE : Color.RED);
+            }
 
             EndTextureMode();
 
             BeginTextureMode(screenPlayer2);
             ClearBackground(Color.LIGHTGRAY);
 
-            for (int i = 0; i < introIndex; i++)
+            foreach (var item in menu)
             {
-                var t = intro[i];
-                DrawText(t.Text, 10, 15 * (i + 1), 10, t.IsNorma ? Color.BLUE : Color.RED);
+                Color c = Color.GOLD;
+
+                if (CheckCollisionPointRec(GetVirtualMouse(), item.Rect))
+                {
+                    c = Color.RED;
+                    if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
+                    {
+                        item.Action();
+                    }
+                }
+
+                DrawRectangledTextEx(item.Rect, item.Text, 30, c, c);
             }
 
             EndTextureMode();

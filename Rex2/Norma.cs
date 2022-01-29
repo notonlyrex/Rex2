@@ -145,7 +145,6 @@ namespace Rex2
 
             if (!sw)
             {
-                AudioManager.Instance.Play(Sounds.Crush);
                 Gravity();
             }
         }
@@ -211,6 +210,7 @@ namespace Rex2
                 {
                     SwapTiles((int)FirstActive.Value.X, (int)FirstActive.Value.Y, (int)SecondActive.Value.X, (int)SecondActive.Value.Y);
                     parent.Energy--;
+                    AudioManager.Instance.Play(Sounds.Crush);
                     Check();
                 }
 
