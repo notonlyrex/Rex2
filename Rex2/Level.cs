@@ -21,13 +21,13 @@ namespace Rex2
         private float BulletSpeed = 250.0f;
         private float EnemySpeed = 100.0f;
 
-        private LevelDefinition level;
-        private Norma norma;
+        private readonly LevelDefinition level;
+        private readonly Norma norma;
 
         private Camera2D camera;
         private Player player;
 
-        private DialogueManager dialogueManager;
+        private readonly DialogueManager dialogueManager;
 
         private bool seenBoss = false;
 
@@ -145,7 +145,7 @@ namespace Rex2
                 LevelManager.Instance.Lose();
             }
 
-            if (level.Enemies.Count(x => x.IsBoss) == 0)
+            if (!level.Enemies.Any(x => x.IsBoss))
             {
                 LevelManager.Instance.Next();
             }
@@ -214,7 +214,7 @@ namespace Rex2
                     ei.Rect.x <= p.X &&
                     ei.Rect.x + ei.Rect.width >= p.X &&
                     ei.Rect.y >= p.Y &&
-                    ei.Rect.y < p.Y + player.Speed * deltaTime)
+                    ei.Rect.y < p.Y + (player.Speed * deltaTime))
                 {
                     hitObstacle = 1;
                     player.Speed = 0.0f;
@@ -230,7 +230,7 @@ namespace Rex2
 
             if (hitObstacle == 0)
             {
-                player.Position = new Vector2 { X = player.Position.X, Y = player.Position.Y + player.Speed * deltaTime };
+                player.Position = new Vector2 { X = player.Position.X, Y = player.Position.Y + (player.Speed * deltaTime) };
                 player.Speed += G * deltaTime;
                 player.CanJump = false;
             }
@@ -248,10 +248,10 @@ namespace Rex2
         private void UpdatePlayer(float deltaTime)
         {
             if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
-                player.Position = new Vector2 { X = player.Position.X - PlayerSpeed * deltaTime, Y = player.Position.Y };
+                player.Position = new Vector2 { X = player.Position.X - (PlayerSpeed * deltaTime), Y = player.Position.Y };
 
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
-                player.Position = new Vector2 { X = player.Position.X + PlayerSpeed * deltaTime, Y = player.Position.Y };
+                player.Position = new Vector2 { X = player.Position.X + (PlayerSpeed * deltaTime), Y = player.Position.Y };
 
             if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_W)) && player.CanJump)
             {
@@ -329,12 +329,12 @@ namespace Rex2
         {
             foreach (var item in level.Enemies.Where(x => x.IsMoving))
             {
-                item.Rect = new Rectangle(item.Rect.x - EnemySpeed * deltaTime, item.Rect.y, item.Rect.width, item.Rect.height);
+                item.Rect = new Rectangle(item.Rect.x - (EnemySpeed * deltaTime), item.Rect.y, item.Rect.width, item.Rect.height);
                 if ((new Vector2(item.Rect.x, item.Rect.y) - item.Origin).Length() > 100)
                     EnemySpeed = -EnemySpeed;
             }
 
-            if (level.Enemies.Count(x => x.HP == 0) > 0)
+            if (level.Enemies.Any(x => x.HP == 0))
             {
                 AudioManager.Instance.Play(Sounds.Die);
             }
@@ -359,7 +359,7 @@ namespace Rex2
             // aktualizacja pozycji
             foreach (var item in level.Bullets)
             {
-                item.Position = new Vector2 { X = item.Position.X + BulletSpeed * deltaTime, Y = item.Position.Y };
+                item.Position = new Vector2 { X = item.Position.X + (BulletSpeed * deltaTime), Y = item.Position.Y };
                 item.RemainingTime -= deltaTime;
             }
 
@@ -370,7 +370,7 @@ namespace Rex2
                 {
                     if (CheckCollisionRecs(item.Rect, e.Rect))
                     {
-                        e.HP -= 1;
+                        e.HP--;
                         item.RemainingTime = 0;
                     }
                 }
@@ -382,7 +382,7 @@ namespace Rex2
 
         private void EnableHighJump()
         {
-            PlayerJumpSpeed = PlayerJumpSpeed + 10;
+            PlayerJumpSpeed += 30;
             dialogueManager.UpdateDialogueOnSituation(Situation.HighJump);
         }
 
@@ -494,13 +494,6 @@ namespace Rex2
             }
         }
 
-        private void RenderHelp()
-        {
-            DrawText("Controls:", 20, 20, 10, BLACK);
-            DrawText("- Right/Left to move", 40, 40, 10, DARKGRAY);
-            DrawText("- Space to jump", 40, 60, 10, DARKGRAY);
-        }
-
         private void RenderPlayer()
         {
             DrawTextureTiled(Textures.Player, new Rectangle(0, 0, Textures.Player.width, Textures.Player.height), player.Rect, new Vector2(0, 0), 0, 1, WHITE);
@@ -551,11 +544,6 @@ namespace Rex2
             DrawResources();
             DrawDialogueText(dialogueManager.DisplayedDialogue.Text, dialogueManager.DisplayedDialogue.IsNorma ? BLUE : RED);
             DrawRemainingTime(level.LevelTime - ElapsedTime);
-        }
-
-        public override void Unload()
-        {
-            base.Unload();
         }
 
         public override void Start()

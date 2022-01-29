@@ -17,7 +17,7 @@ namespace Rex2.levels
         {
             base.Update(deltaTime);
 
-            if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+            if (IsKeyPressed(KeyboardKey.KEY_SPACE))
             {
                 LevelManager.Instance.Next();
             }
@@ -34,6 +34,12 @@ namespace Rex2.levels
             DrawRot13AnimatedText("Graphics: Stanislaw Skulimowski", 10, 10, 40, 15, Color.GREEN);
             DrawRot13AnimatedText("Music: Maryla Kapustka", 10, 10, 60, 15, Color.BLUE);
             DrawRot13AnimatedText("Sounds: Kenney (www.kenney.nl)", 10, 10, 80, 15, Color.GOLD);
+
+            /*
+             * surt https://opengameart.org/content/darknes
+             * SpriteLib Original copyright © 1996-2017 by Ari Feldman
+             * © 2017 - 2022 EEEnt-OFFICIAL
+             */
 
             EndTextureMode();
 
