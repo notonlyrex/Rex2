@@ -4,6 +4,7 @@
     {
         Base,
         Platform,
+        DestroyablePlatform,
         Enemy,
         BossEnemy,
         Powerup
@@ -22,11 +23,18 @@
     {
         private static Platform TemplateToPlatform(Template pt)
         {
-            if (pt.Type != TemplateType.Platform && pt.Type != TemplateType.Base)
+            if (pt.Type != TemplateType.Platform && pt.Type != TemplateType.Base && pt.Type != TemplateType.DestroyablePlatform)
                 throw new ArgumentException("pt");
 
             Platform res = new Platform() { Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = pt.Width, height = (pt.Type == TemplateType.Base) ? 200 : 10 } };
             res.Blocking = true;
+
+            if (pt.Type == TemplateType.DestroyablePlatform)
+            {
+                res.Durability = 2;
+                res.Touched = false;
+                res.Color = Raylib_cs.Color.BEIGE;
+            }
 
             if (pt.Type == TemplateType.Base)
                 res.Color = Raylib_cs.Color.DARKGRAY;
@@ -88,6 +96,14 @@
                             p.Y = i * 20;
                             p.Width += 20;
                         }
+                        else if (line[j] == 'Z')
+                        {
+                            p = new Template();
+                            p.Type = TemplateType.DestroyablePlatform;
+                            p.X = j * 20;
+                            p.Y = i * 20;
+                            p.Width += 20;
+                        }
                         else if (line[j] == 'e')
                         {
                             p = new Template();
@@ -120,6 +136,10 @@
                         {
                             p.Width += 20;
                         }
+                        else if (line[j] == 'Z')
+                        {
+                            p.Width += 20;
+                        }
                     }
 
                     if (line[j] == ' ' && p != null)
@@ -145,6 +165,7 @@
             {
                 case TemplateType.Base:
                 case TemplateType.Platform:
+                case TemplateType.DestroyablePlatform:
                     result.Platforms.Add(TemplateToPlatform(p));
                     break;
 

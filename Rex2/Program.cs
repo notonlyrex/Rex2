@@ -42,7 +42,7 @@ namespace Rex2
 
             LevelManager levelManager = new LevelManager(logo, menu, lose, win, credits);
             levelManager.Add(first);
-            levelManager.Menu();
+            levelManager.Next();
 
             try
             {

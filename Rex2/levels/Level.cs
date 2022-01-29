@@ -221,6 +221,12 @@ namespace Rex2
                     hitObstacle = 1;
                     player.Speed = 0.0f;
                     player.Position = new Vector2 { X = player.Position.X, Y = ei.Rect.y };
+
+                    if (ei.Durability > 0 && !ei.Touched)
+                    {
+                        dialogueManager.UpdateDialogueOnSituation(Situation.JumpNow);
+                        ei.Touched = true;
+                    }
                 }
             }
 
@@ -232,6 +238,13 @@ namespace Rex2
             }
             else
                 player.CanJump = true;
+
+            foreach (var item in level.Platforms.Where(p => p.Durability > 0 && p.Touched))
+            {
+                item.Durability -= 1 * deltaTime;
+            }
+
+            level.Platforms.RemoveAll(p => p.Durability <= 0 && p.Touched);
         }
 
         private void UpdatePlayer(float deltaTime)

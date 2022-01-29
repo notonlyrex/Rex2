@@ -1,5 +1,6 @@
 # komentarze znakiem #
 # X oznacza platforme
+# Z oznacza platforme, ktora znika po czasie
 # B oznacza platforme bazowa
 # e oznacza przeciwnika
 # E oznacza bossa
@@ -17,7 +18,7 @@
 
 
 
-           XXXXX       XX   XX     XX
+           ZZZZZ       XX   XX     XX
 
 
              p
@@ -27,7 +28,7 @@
 
 
              p
-           XXXXX                   XXXXX
+           ZZZZZ               XXXXX
 
 
 

@@ -315,6 +315,10 @@
                     currentSequence = doNotTouch;
                     break;
 
+                case Situation.JumpNow:
+                    currentSequence = jump;
+                    break;
+
                 default:
                     currentSequence = doingGreat;
                     break;
@@ -340,6 +344,7 @@
         Introduction,
         Boss,
         MegaBuff,
-        DoNotTouch
+        DoNotTouch,
+        JumpNow
     }
 }

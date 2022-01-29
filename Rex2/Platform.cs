@@ -7,7 +7,8 @@ namespace Rex2
         public Rectangle Rect { get; set; }
         public bool Blocking { get; set; }
         public Color Color { get; set; }
-        public int Durability { get; set; }
+        public float Durability { get; set; }
+        public bool Touched { get; internal set; }
 
         public Platform()
         {
