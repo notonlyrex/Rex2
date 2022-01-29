@@ -59,24 +59,46 @@ namespace Rex2
             jewel = LoadTexture("assets/jewel.png");
         }
 
-        private void BuffPlayer(TileType t)
+        private void BuffPlayer(TileType t, int count)
         {
+            int multiply = 0;
+            if (count == 3)
+            {
+                multiply = 1;
+            }
+            else if (count == 4)
+            {
+                multiply = 2;
+            }
+            else if (count == 5)
+            {
+                multiply = 3;
+            }
+            else if (count >= 6)
+            {
+                multiply = 4;
+            }
+
             switch (t)
             {
-                case TileType.GREEN:
-                    if (player.HP < 4) player.HP++;
+                case TileType.RED:
+                    if (player.HP < 4) player.HP += multiply;
                     break;
 
-                case TileType.RED:
-                    if (player.Shield < 4) player.Shield++;
+                case TileType.GREEN:
+                    if (player.Shield < 4) player.Shield += multiply;
+                    break;
+
+                case TileType.BLUE:
+                    if (player.Ammo < 4) player.Ammo += multiply;
                     break;
 
                 case TileType.YELLOW:
-                    if (player.Ammo < 4) player.Ammo++;
+                    level.LevelTime += multiply;
                     break;
 
                 case TileType.WHITE:
-                    EnableHighJump();
+                    if (multiply >= 2) EnableHighJump();
                     break;
             }
         }
@@ -84,7 +106,7 @@ namespace Rex2
         private void UpdateTime(object? state)
         {
             ElapsedTime++;
-            dialogueManager.UpdateDialogue(this, player);
+            dialogueManager.UpdateDialogue(this, level, player);
         }
 
         public override void Update(float deltaTime)
@@ -103,26 +125,7 @@ namespace Rex2
 
         private void UpdatePlayer1(float deltaTime)
         {
-            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
-                player.Position = new Vector2 { X = player.Position.X - PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
-
-            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
-                player.Position = new Vector2 { X = player.Position.X + PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
-
-            if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_W)) && player.CanJump)
-            {
-                player.Speed = -PLAYER_JUMP_SPD;
-
-                player.CanJump = false;
-            }
-
-            if (IsKeyPressed(KEY_LEFT_CONTROL) || IsKeyPressed(KEY_RIGHT_CONTROL))
-            {
-                //if (player.Ammo > 0)
-                {
-                    level.Bullets.Add(new Bullet { IsOrientedRight = true, RemainingTime = 5, Position = new Vector2(player.Position.X + 20, player.Position.Y - 10) });
-                }
-            }
+            UpdatePlayer(deltaTime);
 
             UpdateBullets(deltaTime);
             UpdateEnemies(deltaTime);
@@ -132,6 +135,12 @@ namespace Rex2
                 EnableHighJump();
             }
 
+            UpdatePlayerOnPlatforms(deltaTime);
+            UpdateCameraCenter(ref camera, ref player, level.Platforms, deltaTime, screenWidth, screenHeight);
+        }
+
+        private void UpdatePlayerOnPlatforms(float deltaTime)
+        {
             int hitObstacle = 0;
             for (int i = 0; i < level.Platforms.Count; i++)
             {
@@ -157,7 +166,31 @@ namespace Rex2
             }
             else
                 player.CanJump = true;
-            UpdateCameraCenter(ref camera, ref player, level.Platforms, deltaTime, screenWidth, screenHeight);
+        }
+
+        private void UpdatePlayer(float deltaTime)
+        {
+            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+                player.Position = new Vector2 { X = player.Position.X - PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
+
+            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+                player.Position = new Vector2 { X = player.Position.X + PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
+
+            if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_W)) && player.CanJump)
+            {
+                player.Speed = -PLAYER_JUMP_SPD;
+
+                player.CanJump = false;
+            }
+
+            if (IsKeyPressed(KEY_LEFT_CONTROL) || IsKeyPressed(KEY_RIGHT_CONTROL))
+            {
+                if (player.Ammo > 0)
+                {
+                    level.Bullets.Add(new Bullet { IsOrientedRight = true, RemainingTime = 5, Position = new Vector2(player.Position.X + 20, player.Position.Y - 10) });
+                    player.Ammo--;
+                }
+            }
         }
 
         private void UpdateEnemies(float deltaTime)
@@ -209,6 +242,7 @@ namespace Rex2
             RenderBullets();
             RenderEnemies();
             RenderPlayer();
+
             EndMode2D();
 
             RenderHelp();
@@ -222,6 +256,13 @@ namespace Rex2
             RenderPlayer2();
 
             EndTextureMode();
+        }
+
+        private void RenderPlayerStats()
+        {
+            DrawText($"{player.HP}", 60, 15, 20, RED);
+            DrawText($"{player.Shield}", 265, 15, 20, GREEN);
+            DrawText($"{player.Ammo}", 470, 15, 20, BLUE);
         }
 
         private void RenderBullets()
@@ -337,8 +378,9 @@ namespace Rex2
         {
             base.DrawMain();
 
+            RenderPlayerStats();
             DrawDialogueText(dialogueManager.DisplayedDialogue.Text, dialogueManager.DisplayedDialogue.IsNorma ? BLUE : RED);
-            DrawRemainingTime(LevelTime - ElapsedTime);
+            DrawRemainingTime(level.LevelTime - ElapsedTime);
         }
 
         public override void Unload()

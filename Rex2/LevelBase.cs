@@ -9,6 +9,7 @@ namespace Rex2
         public List<Enemy> Enemies { get; set; }
         public List<Powerup> Powerups { get; set; }
         public List<Bullet> Bullets { get; set; }
+        public int LevelTime { get; set; } = 99;
 
         public LevelDefinition()
         {
@@ -33,7 +34,6 @@ namespace Rex2
         protected TimerCallback timerCallback;
 
         public int ElapsedTime { get; protected set; }
-        public int LevelTime { get; protected set; } = 99;
 
         public LevelBase(int screenHeight, int screenWidth, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2)
         {

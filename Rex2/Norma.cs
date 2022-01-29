@@ -9,20 +9,17 @@ namespace Rex2
         public Match3GameManager Board { get; set; }
         public int Energy { get; set; } = 0;
 
-        public Action<TileType> GiveBuff { get; set; }
+        public Action<TileType, int> GiveBuff { get; set; }
 
         public Norma()
         {
             Board = new Match3GameManager(7, 6);
             Board.OnDestroyed += (e) =>
             {
-                foreach (var item in e.Where(x => x != TileType.WHITE).Distinct())
+                foreach (var item in e.Distinct())
                 {
-                    GiveBuff?.Invoke(item);
+                    GiveBuff?.Invoke(item, e.Count(x => x == item));
                 }
-
-                if (e.Count(x => x == TileType.WHITE) > 4)
-                    GiveBuff?.Invoke(TileType.WHITE);
             };
         }
     }

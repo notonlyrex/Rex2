@@ -190,9 +190,9 @@
             dialogueShowTime = elapsedTime;
         }
 
-        public void UpdateDialogue(LevelBase level, Player player)
+        public void UpdateDialogue(LevelBase level, LevelDefinition def, Player player)
         {
-            if (level.LevelTime - level.ElapsedTime < 30 && currentSequence != outOfTime)
+            if (def.LevelTime - level.ElapsedTime < 30 && currentSequence != outOfTime)
             {
                 UpdateDialogueOnSituation(Situation.OutOfTime);
                 return;
