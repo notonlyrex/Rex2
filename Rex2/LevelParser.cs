@@ -7,6 +7,7 @@
         DestructiblePlatform,
         Enemy,
         BossEnemy,
+        MovingEnemy,
         Powerup
     }
 
@@ -46,7 +47,7 @@
 
         private static Enemy TemplateToEnemy(Template pt)
         {
-            if (pt.Type != TemplateType.Enemy && pt.Type != TemplateType.BossEnemy)
+            if (pt.Type != TemplateType.Enemy && pt.Type != TemplateType.BossEnemy && pt.Type != TemplateType.MovingEnemy)
                 throw new ArgumentException("pt");
 
             Enemy res = new Enemy()
@@ -54,6 +55,14 @@
                 Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 33, height = 22 },
                 HP = 1
             };
+
+            if (pt.Type == TemplateType.MovingEnemy)
+            {
+                res.Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 32, height = 20 };
+                res.HP = 1;
+                res.Origin = new System.Numerics.Vector2(pt.X, pt.Y);
+                res.IsMoving = true;
+            }
 
             if (pt.Type == TemplateType.BossEnemy)
             {
@@ -126,6 +135,13 @@
                             p.X = j * 20;
                             p.Y = i * 20;
                         }
+                        else if (line[j] == 'f')
+                        {
+                            p = new Template();
+                            p.Type = TemplateType.MovingEnemy;
+                            p.X = j * 20;
+                            p.Y = i * 20;
+                        }
                     }
                     else
                     {
@@ -174,6 +190,7 @@
 
                 case TemplateType.Enemy:
                 case TemplateType.BossEnemy:
+                case TemplateType.MovingEnemy:
                     result.Enemies.Add(TemplateToEnemy(p));
                     break;
 

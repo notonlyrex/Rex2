@@ -2,7 +2,7 @@
 # X oznacza platforme
 # Z oznacza platforme, ktora znika po czasie
 # B oznacza platforme bazowa
-# e oznacza przeciwnika
+# e oznacza przeciwnika, f oznacza przeciwnika latajacego
 # E oznacza bossa
 # p oznacza znajdzke
 #
@@ -25,7 +25,7 @@
                          Z      X
 
                              Z
-
+                             f
                          Z      X
                          
                              Z
@@ -35,8 +35,8 @@
                          XXXXXXXXX
 
                     Z X X
-                           e      e
-                           X      X      p
+                           e      f
+                           XX     XX      p
                                         XXX
 
                                      XXX
@@ -65,7 +65,7 @@
              p
            XXXXX               XXXXX
 
-
+           f
 
                 
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB

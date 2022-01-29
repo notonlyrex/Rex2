@@ -16,8 +16,10 @@ namespace Rex2
 
         private const int G = 400;
 
-        private float PLAYER_JUMP_SPD = 350.0f;
-        private float PLAYER_HOR_SPD = 200.0f;
+        private float PlayerJumpSpeed = 350.0f;
+        private float PlayerSpeed = 200.0f;
+        private float BulletSpeed = 250.0f;
+        private float EnemySpeed = 100.0f;
 
         private LevelDefinition level;
         private Norma norma;
@@ -246,16 +248,16 @@ namespace Rex2
         private void UpdatePlayer(float deltaTime)
         {
             if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
-                player.Position = new Vector2 { X = player.Position.X - PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
+                player.Position = new Vector2 { X = player.Position.X - PlayerSpeed * deltaTime, Y = player.Position.Y };
 
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
-                player.Position = new Vector2 { X = player.Position.X + PLAYER_HOR_SPD * deltaTime, Y = player.Position.Y };
+                player.Position = new Vector2 { X = player.Position.X + PlayerSpeed * deltaTime, Y = player.Position.Y };
 
             if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_W)) && player.CanJump)
             {
                 AudioManager.Instance.Play(Sounds.Jump);
 
-                player.Speed = -PLAYER_JUMP_SPD;
+                player.Speed = -PlayerJumpSpeed;
 
                 player.CanJump = false;
             }
@@ -265,7 +267,7 @@ namespace Rex2
                 if (player.Ammo > 0)
                 {
                     AudioManager.Instance.Play(Sounds.Bullet);
-                    level.Bullets.Add(new Bullet { IsOrientedRight = true, RemainingTime = 5, Position = new Vector2(player.Position.X + 20, player.Position.Y - 10) });
+                    level.Bullets.Add(new Bullet { IsOrientedRight = true, RemainingTime = 5, Position = new Vector2(player.Position.X + 20, player.Position.Y - 17) });
                     player.Ammo--;
                 }
             }
@@ -325,6 +327,13 @@ namespace Rex2
 
         private void UpdateEnemies(float deltaTime)
         {
+            foreach (var item in level.Enemies.Where(x => x.IsMoving))
+            {
+                item.Rect = new Rectangle(item.Rect.x - EnemySpeed * deltaTime, item.Rect.y, item.Rect.width, item.Rect.height);
+                if ((new Vector2(item.Rect.x, item.Rect.y) - item.Origin).Length() > 100)
+                    EnemySpeed = -EnemySpeed;
+            }
+
             if (level.Enemies.Count(x => x.HP == 0) > 0)
             {
                 AudioManager.Instance.Play(Sounds.Die);
@@ -350,7 +359,7 @@ namespace Rex2
             // aktualizacja pozycji
             foreach (var item in level.Bullets)
             {
-                item.Position = new Vector2 { X = item.Position.X + (PLAYER_HOR_SPD + 10) * deltaTime, Y = item.Position.Y };
+                item.Position = new Vector2 { X = item.Position.X + BulletSpeed * deltaTime, Y = item.Position.Y };
                 item.RemainingTime -= deltaTime;
             }
 
@@ -373,7 +382,7 @@ namespace Rex2
 
         private void EnableHighJump()
         {
-            PLAYER_JUMP_SPD = PLAYER_JUMP_SPD + 10;
+            PlayerJumpSpeed = PlayerJumpSpeed + 10;
             dialogueManager.UpdateDialogueOnSituation(Situation.HighJump);
         }
 
@@ -523,6 +532,10 @@ namespace Rex2
                 if (item.IsBoss)
                 {
                     DrawTexturePro(Textures.Boss, new Rectangle(0, 0, Textures.Boss.width, Textures.Boss.height), item.Rect, new Vector2(0, 0), 0, WHITE);
+                }
+                else if (item.IsMoving)
+                {
+                    DrawTexturePro(Textures.Enemy2, new Rectangle(0, 0, Textures.Enemy2.width, Textures.Enemy2.height), item.Rect, new Vector2(0, 0), 0, WHITE);
                 }
                 else
                 {

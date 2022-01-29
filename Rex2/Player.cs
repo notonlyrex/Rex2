@@ -12,6 +12,6 @@ namespace Rex2
         public int Shield { get; set; }
         public int Ammo { get; set; }
 
-        public Rectangle Rect => new Rectangle(Position.X - 18, Position.Y - 32, 18, 32);
+        public Rectangle Rect => new Rectangle(Position.X - 9, Position.Y - 32, 18, 32);
     }
 }
