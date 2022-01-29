@@ -5,6 +5,7 @@ namespace Rex2
     public class AudioManager
     {
         private Dictionary<Sounds, Sound> _sounds;
+        private Music music;
 
         public static AudioManager Instance { get; private set; } = new AudioManager();
 
@@ -20,11 +21,24 @@ namespace Rex2
             _sounds[Sounds.Crush] = Raylib.LoadSound(@"assets/crush.ogg");
             _sounds[Sounds.Die] = Raylib.LoadSound(@"assets/die.ogg");
             _sounds[Sounds.Take] = Raylib.LoadSound(@"assets/take.ogg");
+
+            music = Raylib.LoadMusicStream("assets/music.mp3");
+        }
+
+        public void PlayMusic()
+        {
+            Raylib.SetMusicVolume(music, 0.1f);
+            Raylib.PlayMusicStream(music);
         }
 
         public void Play(Sounds s)
         {
             Raylib.PlaySound(_sounds[s]);
+        }
+
+        public void UpdateMusicStream()
+        {
+            Raylib.UpdateMusicStream(music);
         }
     }
 

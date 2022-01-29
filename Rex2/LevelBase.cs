@@ -11,6 +11,7 @@ namespace Rex2
         public List<Powerup> Powerups { get; set; }
         public List<Bullet> Bullets { get; set; }
         public int LevelTime { get; set; } = 99;
+        public int StartingY { get; set; }
 
         public LevelDefinition()
         {
@@ -128,14 +129,21 @@ namespace Rex2
 
         protected void DrawRectangledTextEx(Rectangle container, string text, int fontSize, Color borderColor, Color textColor)
         {
-            Raylib.DrawRectangleLinesEx(container, 3, borderColor); // Draw container border
+            try
+            {
+                Raylib.DrawRectangleLinesEx(container, 3, borderColor); // Draw container border
 
-            // Draw text in container (add some padding)
-            Raylib.DrawTextRec(font, text,
-                       new Rectangle(container.x + 4, container.y + 4, container.width - 4, container.height - 4),
-                       fontSize, 2.0f, true, textColor);
+                // Draw text in container (add some padding)
+                Raylib.DrawTextRec(font, text,
+                           new Rectangle(container.x + 4, container.y + 4, container.width - 4, container.height - 4),
+                           fontSize, 2.0f, true, textColor);
 
-            Raylib.DrawRectangleRec(new Rectangle(container.x + container.width - 6, container.y + container.height - 6, 8, 8), borderColor);
+                Raylib.DrawRectangleRec(new Rectangle(container.x + container.width - 6, container.y + container.height - 6, 8, 8), borderColor);
+            }
+            catch (AccessViolationException)
+            {
+                return;
+            }
         }
     }
 }

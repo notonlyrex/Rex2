@@ -33,12 +33,12 @@ namespace Rex2
 
         public Level(int screenHeight, int screenWidth, bool showIntro, string fileName, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
+            level = LevelParser.Parse($"levels/{fileName}.txt");
+
             player = new Player();
-            player.Position = new Vector2(400, 280);
+            player.Position = new Vector2(400, level.StartingY);
             player.Speed = 0;
             player.CanJump = false;
-
-            level = LevelParser.Parse($"levels/{fileName}.txt");
 
             camera = new Camera2D();
             camera.target = player.Position;
@@ -317,6 +317,7 @@ namespace Rex2
                     if (item.IsBoss)
                     {
                         player.Position = new Vector2(player.Position.X - 120, player.Position.Y - 120);
+                        item.HP--;
                     }
                     else
                     {

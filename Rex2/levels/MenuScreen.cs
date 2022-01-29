@@ -95,6 +95,7 @@ namespace Rex2.levels
                     if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
                     {
                         item.Action();
+                        return;
                     }
                 }
 

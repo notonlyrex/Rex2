@@ -13,6 +13,8 @@ namespace Rex2
             const int screenWidth = 310;
             const int screenHeight = 310;
 
+            // bazowe okno
+            // (ale w trybie release i tak będzie fullscreen)
             const int gameWidth = 640;
             const int gameHeight = 360;
             const int scale = 2;
@@ -22,6 +24,9 @@ namespace Rex2
             SetWindowState(ConfigFlags.FLAG_FULLSCREEN_MODE);
 #endif
             SetTargetFPS(60);
+
+            // inicjalizacja rzeczy do wyświetlania - dwóch ekranów
+            // i tego małego czegoś na dole
             RenderTexture2D screenPlayer1 = LoadRenderTexture(screenWidth, screenHeight);
             RenderTexture2D screenPlayer2 = LoadRenderTexture(screenWidth, screenHeight);
             Texture2D baseTexture = LoadTexture("assets/base.png");
@@ -33,6 +38,7 @@ namespace Rex2
             Rectangle chevroSrc = new Rectangle(0, 0, chevron.width, chevron.height);
             Rectangle chevroDest = new Rectangle(468 * scale, 330 * scale, 22 * scale, 12 * scale);
 
+            // lista dostępnych poziomów i ekranów
             Level first = new Level(screenHeight, screenWidth, true, "testlevel", ref screenPlayer1, ref screenPlayer2);
             LogoScreen logo = new LogoScreen(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2);
             WinScreen win = new WinScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
@@ -42,26 +48,37 @@ namespace Rex2
 
             LevelManager levelManager = new LevelManager(logo, menu, lose, win, credits);
             levelManager.Add(first);
-            levelManager.Next();
+
+#if DEBUG
+            levelManager.Welcome();
+#else
+            levelManager.Welcome();
+#endif
 
             try
             {
+                // dopóki okno nie zostanie zamknięte
                 while (!WindowShouldClose())
                 {
                     float deltaTime = GetFrameTime();
 
+                    // zaktualizuj aktualny ekran
                     levelManager.Current.Update(deltaTime);
 
                     BeginDrawing();
                     ClearBackground(BLACK);
 
+                    // narysuj go na dwóch ekranach
                     DrawTextureEx(baseTexture, Vector2.Zero, 0, 2, WHITE);
                     DrawTexturePro(screenPlayer1.texture, sourceRec, destRec, new Vector2(0, 0), 0.0f, WHITE);
                     DrawTexturePro(screenPlayer2.texture, sourceRec, destRec2, new Vector2(0, 0), 0.0f, WHITE);
 
                     levelManager.Current.DrawMain();
 
+                    // dorysuj chevron na dole
                     DrawTexturePro(chevron, chevroSrc, chevroDest, new Vector2(0, 0), 0, WHITE);
+
+                    AudioManager.Instance.UpdateMusicStream();
 
                     EndDrawing();
                 }
@@ -69,6 +86,7 @@ namespace Rex2
             catch (AccessViolationException) { }
             finally
             {
+                // wyładuj rzeczy z pamięci
                 UnloadRenderTexture(screenPlayer1);
                 UnloadRenderTexture(screenPlayer2);
                 UnloadTexture(baseTexture);

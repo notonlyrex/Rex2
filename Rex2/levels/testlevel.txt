@@ -14,13 +14,48 @@
                            E
                            X
 
+                        X
+                              X
+
+                           X
+
+                         XXXXXXXXX
+
+
+                         Z
+
+                             Z
+
+                         Z
+                         
+                             Z
+                         
+                         Z
+                         
+                         XXXXXXXXX
+
+                    Z X X
+                           e      e
+                           X      X      p
+                                        XXX
+
+                                     XXX
+                                  XXX
+
+                               XXX
+                           XXX
+
+                         e        p
+                        XXXX    XXXX
+
+
                   XX               XXXX
 
 
+                          e    e    e
+             ZZZZZ       XX   XX   XX
 
-           ZZZZZ       XX   XX     XX
-
-
+                    XX
              p
            
                 XXXXXXXXXXXXXXXXXXXX
@@ -28,9 +63,9 @@
 
 
              p
-           ZZZZZ               XXXXX
+           XXXXX               XXXXX
 
 
 
-                      e       e       e         e
+                
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB

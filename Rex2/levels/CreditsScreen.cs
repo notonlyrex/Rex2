@@ -33,6 +33,7 @@ namespace Rex2.levels
             DrawAnimatedText("Code: Marcin \"Ktos\" Badurowicz", 10, 10, 10, 15, Color.RED);
             DrawRot13AnimatedText("Graphics: Stanislaw Skulimowski", 10, 10, 40, 15, Color.GREEN);
             DrawRot13AnimatedText("Music: Maryla Kapustka", 10, 10, 60, 15, Color.BLUE);
+            DrawRot13AnimatedText("Sounds: Kenney (www.kenney.nl)", 10, 10, 80, 15, Color.GOLD);
 
             EndTextureMode();
 
@@ -49,6 +50,7 @@ namespace Rex2.levels
                     if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
                     {
                         item.Action();
+                        return;
                     }
                 }
 

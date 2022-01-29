@@ -156,6 +156,8 @@
                 }
             }
 
+            result.StartingY = (lines.Count - 1) * 20;
+
             return result;
         }
 

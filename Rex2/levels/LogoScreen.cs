@@ -24,5 +24,11 @@ namespace Rex2.levels
         {
             Raylib.DrawTextureEx(logo, Vector2.Zero, 0, 2, Color.WHITE);
         }
+
+        public override void Start()
+        {
+            base.Start();
+            AudioManager.Instance.PlayMusic();
+        }
     }
 }
