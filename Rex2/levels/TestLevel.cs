@@ -29,6 +29,8 @@ namespace Rex2
 
         private Texture2D jewel;
 
+        private bool seenBoss = false;
+
         public TestLevel(int screenHeight, int screenWidth, Vector2 origin, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
             player = new Player();
@@ -251,12 +253,23 @@ namespace Rex2
                 }
             }
 
+            if (!seenBoss && player.Position.Y < 50)
+            {
+                dialogueManager.UpdateDialogueOnSituation(Situation.Boss);
+                seenBoss = true;
+            }
+
+            UpdatePlayerOnEnemies();
+        }
+
+        private void UpdatePlayerOnEnemies()
+        {
             // aktualizacja kolizji gracza z przeciwnikami
             foreach (var item in level.Enemies)
             {
                 if (CheckCollisionRecs(item.Rect, player.Rect))
                 {
-                    item.HP = 0;
+                    dialogueManager.UpdateDialogueOnSituation(Situation.DoNotTouch);
                     if (player.Shield > 0)
                     {
                         player.Shield--;
@@ -264,6 +277,15 @@ namespace Rex2
                     else
                     {
                         player.HP--;
+                    }
+
+                    if (item.IsBoss)
+                    {
+                        player.Position = new Vector2(player.Position.X - 120, player.Position.Y - 120);
+                    }
+                    else
+                    {
+                        item.HP = 0;
                     }
                 }
             }
@@ -434,7 +456,7 @@ namespace Rex2
         {
             foreach (var item in level.Enemies)
             {
-                DrawRectangleRec(item.Rect, GOLD);
+                DrawRectangleRec(item.Rect, item.IsBoss ? GOLD : YELLOW);
             }
         }
 

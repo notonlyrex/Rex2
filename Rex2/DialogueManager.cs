@@ -27,6 +27,7 @@
         private List<Dialogue> takeShiny;
         private List<Dialogue> lowHp;
         private List<Dialogue> jump;
+        private List<Dialogue> doNotTouch;
         private List<Dialogue> highJump;
         private List<Dialogue> almost;
         private List<Dialogue> boss;
@@ -171,6 +172,10 @@
                 new Dialogue { Text = "Rex, jump off this platform NOW!", IsNorma = true },
             };
 
+            doNotTouch = new List<Dialogue>() {
+                new Dialogue { Text = "DO NOT TOUCH THE VIRUS!", IsNorma = true },
+            };
+
             highJump = new List<Dialogue>() {
                 new Dialogue { Text = "You can jump higher now!", IsNorma = true },
             };
@@ -303,6 +308,10 @@
                     currentSequence = megabuff;
                     break;
 
+                case Situation.DoNotTouch:
+                    currentSequence = doNotTouch;
+                    break;
+
                 default:
                     currentSequence = doingGreat;
                     break;
@@ -327,6 +336,7 @@
         OutOfTime,
         Introduction,
         Boss,
-        MegaBuff
+        MegaBuff,
+        DoNotTouch
     }
 }
