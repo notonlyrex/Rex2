@@ -53,8 +53,10 @@ namespace Rex2
             norma = new Norma();
             norma.GiveBuff += BuffPlayer;
 
-            timerCallback = UpdateTime;
-            timer = new Timer(timerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            timer = new System.Timers.Timer();
+            timer.Elapsed += UpdateTime;
+            timer.Interval = TimeSpan.FromSeconds(1).TotalMilliseconds;
+            timer.AutoReset = true;
 
             jewel = LoadTexture("assets/jewel.png");
         }
@@ -79,18 +81,28 @@ namespace Rex2
                 multiply = 4;
             }
 
+            if (count >= 5)
+            {
+                dialogueManager.UpdateDialogueOnSituation(Situation.MegaBuff);
+                player.HP += multiply;
+                player.Shield += multiply;
+                player.Ammo += multiply;
+                level.LevelTime += multiply;
+                return;
+            }
+
             switch (t)
             {
                 case TileType.RED:
-                    if (player.HP < 4) player.HP += multiply;
+                    player.HP += multiply;
                     break;
 
                 case TileType.GREEN:
-                    if (player.Shield < 4) player.Shield += multiply;
+                    player.Shield += multiply;
                     break;
 
                 case TileType.BLUE:
-                    if (player.Ammo < 4) player.Ammo += multiply;
+                    player.Ammo += multiply;
                     break;
 
                 case TileType.YELLOW:
@@ -98,12 +110,12 @@ namespace Rex2
                     break;
 
                 case TileType.WHITE:
-                    if (multiply >= 2) EnableHighJump();
+                    if (count >= 4) EnableHighJump();
                     break;
             }
         }
 
-        private void UpdateTime(object? state)
+        private void UpdateTime(object? sender, System.Timers.ElapsedEventArgs e)
         {
             ElapsedTime++;
             dialogueManager.UpdateDialogue(this, level, player, norma);
@@ -116,7 +128,22 @@ namespace Rex2
             UpdatePlayer1(deltaTime);
             UpdatePlayer2(deltaTime);
 
+            CheckWinLose();
+
             Draw();
+        }
+
+        private void CheckWinLose()
+        {
+            if (ElapsedTime > level.LevelTime || player.HP == 0)
+            {
+                LevelManager.Instance.Lose();
+            }
+
+            if (level.Enemies.Count(x => x.IsBoss) == 0)
+            {
+                LevelManager.Instance.Next();
+            }
         }
 
         private void UpdatePlayer2(float deltaTime)
@@ -157,6 +184,11 @@ namespace Rex2
             {
                 AudioManager.Instance.Play(Sounds.ImportantDialogue);
                 norma.Energy++;
+            }
+
+            if (IsKeyPressed(KEY_F6))
+            {
+                BuffPlayer(TileType.GREEN, 6);
             }
 
             UpdatePlayerOnPlatforms(deltaTime);
@@ -218,10 +250,32 @@ namespace Rex2
                     player.Ammo--;
                 }
             }
+
+            // aktualizacja kolizji gracza z przeciwnikami
+            foreach (var item in level.Enemies)
+            {
+                if (CheckCollisionRecs(item.Rect, player.Rect))
+                {
+                    item.HP = 0;
+                    if (player.Shield > 0)
+                    {
+                        player.Shield--;
+                    }
+                    else
+                    {
+                        player.HP--;
+                    }
+                }
+            }
         }
 
         private void UpdateEnemies(float deltaTime)
         {
+            if (level.Enemies.Count(x => x.HP == 0) > 0)
+            {
+                AudioManager.Instance.Play(Sounds.Die);
+            }
+
             // usuwanie martwych
             level.Enemies.RemoveAll(x => x.HP <= 0);
         }
@@ -365,8 +419,7 @@ namespace Rex2
 
         private void RenderPlayer()
         {
-            Rectangle playerRect = new Rectangle(player.Position.X - 20, player.Position.Y - 40, 40, 40);
-            DrawRectangleRec(playerRect, RED);
+            DrawRectangleRec(player.Rect, RED);
         }
 
         private void RenderPlatforms()
@@ -399,6 +452,18 @@ namespace Rex2
             base.Unload();
 
             UnloadTexture(jewel);
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            timer.Start();
+        }
+
+        public override void Stop()
+        {
+            base.Stop();
+            timer.Stop();
         }
     }
 }

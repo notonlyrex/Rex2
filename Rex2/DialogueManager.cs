@@ -5,7 +5,7 @@
         public string Text { get; set; }
         public bool IsNorma { get; set; }
 
-        public int Time => Text.Length > 0 ? Text.Split(' ').Length * 1 : 5;
+        public int Time => Text.Length > 0 ? Text.Split(' ').Length / 2 : 5;
     }
 
     internal class DialogueManager
@@ -32,6 +32,7 @@
         private List<Dialogue> boss;
         private List<Dialogue> megabuff;
         private List<Dialogue> introduction;
+        private List<Dialogue> introduction2;
         private List<Dialogue> doingGreat;
 
         public DialogueManager()
@@ -40,7 +41,28 @@
                 new Dialogue { Text = "Hello, Remiligius.", IsNorma = true },
                 new Dialogue { Text = "Name's Rex.", IsNorma = false },
                 new Dialogue { Text = "It was a name of your dog, wasn't it?", IsNorma = true },
-                new Dialogue { Text = "Nevermind. We have a problem.", IsNorma = true },
+                new Dialogue { Text = "What's going on, Norma!", IsNorma = false },
+                new Dialogue { Text = "Grobons, again.", IsNorma = true },
+                new Dialogue { Text = "They released quantum viruses,", IsNorma = true },
+                new Dialogue { Text = "I cannot fight them alone.", IsNorma = true },
+                new Dialogue { Text = "I need your help.", IsNorma = true },
+                new Dialogue { Text = "How?", IsNorma = false },
+                new Dialogue { Text = "It's simple, I will transfer you into the computer.", IsNorma = true },
+                new Dialogue { Text = "You will kill viruses, I will be supporting you.", IsNorma = true },
+                new Dialogue { Text = "How does it sound, partner?", IsNorma = true },
+                new Dialogue { Text = "Ok. Let's go.", IsNorma = false },
+                empty
+            };
+
+            introduction2 = new List<Dialogue>() {
+                new Dialogue { Text = "Ok, so you are using LEFT/A or RIGHT/D", IsNorma = true },
+                new Dialogue { Text = "and SPACE/W to jump.", IsNorma = true },
+                new Dialogue { Text = "I am trying to decode the ciphers", IsNorma = true },
+                new Dialogue { Text = "by matching 3 or more those spheres.", IsNorma = true },
+                new Dialogue { Text = "This will give you health, shields and ammo.", IsNorma = true },
+                new Dialogue { Text = "Use CTRL to shoot if you have ammo.", IsNorma = true },
+                new Dialogue { Text = "Try not to touch the virus without shields.", IsNorma = true },
+                new Dialogue { Text = "Let's go.", IsNorma = false },
                 empty
             };
 
@@ -75,6 +97,7 @@
 
             randomSequences.Add(new List<Dialogue>() {
                 new Dialogue { Text = "...🎵zaaaaaankoku na tenshi no mina wa🎶....", IsNorma = true },
+                new Dialogue { Text = "Norma, for the God's sake!", IsNorma = false },
                 empty
             });
 
@@ -110,7 +133,7 @@
                 new Dialogue { Text = "for a very long time", IsNorma = true },
                 new Dialogue { Text = "Rex...", IsNorma = true },
                 new Dialogue { Text = "I...", IsNorma = true },
-                new Dialogue { Text = "I... I need a yearly technical analysis done!", IsNorma = true },
+                new Dialogue { Text = "I... I need a yearly technical checkup done!", IsNorma = true },
                 empty
             });
 
@@ -137,7 +160,7 @@
             };
 
             takeShiny = new List<Dialogue>() {
-                new Dialogue { Text = "Take that shiny thing! I'm out of energy!", IsNorma = true }
+                new Dialogue { Text = "Take the shiny thing! I'm out of energy!", IsNorma = true }
             };
 
             lowHp = new List<Dialogue>() {
@@ -169,12 +192,18 @@
             };
 
             megabuff = new List<Dialogue> {
-                new Dialogue { Text = "It's not I like you or something...  s-s-stupid!", IsNorma = true }
+                new Dialogue { Text = "MEGA BUFF! It's not I like you or something...  s-s-stupid!", IsNorma = true }
             };
 
             randomSequences = randomSequences.OrderBy(_ => r.Next()).ToList();
             currentSequenceIndex = 0;
-            UpdateCurrentSequence();
+            //UpdateCurrentSequence();
+            UpdateDialogueOnSituation(Situation.Introduction);
+        }
+
+        public List<Dialogue> Introduction()
+        {
+            return introduction;
         }
 
         private void UpdateCurrentSequence()
@@ -250,6 +279,10 @@
                     currentSequence = highJump;
                     break;
 
+                case Situation.Introduction:
+                    currentSequence = introduction2;
+                    break;
+
                 case Situation.LowNormaEnergy:
                     currentSequence = takeShiny;
                     break;
@@ -260,6 +293,14 @@
 
                 case Situation.OutOfTime:
                     currentSequence = outOfTime;
+                    break;
+
+                case Situation.Boss:
+                    currentSequence = boss;
+                    break;
+
+                case Situation.MegaBuff:
+                    currentSequence = megabuff;
                     break;
 
                 default:
@@ -283,6 +324,9 @@
         HighJump,
         LowHP,
         LowNormaEnergy,
-        OutOfTime
+        OutOfTime,
+        Introduction,
+        Boss,
+        MegaBuff
     }
 }

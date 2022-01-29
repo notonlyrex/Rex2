@@ -10,7 +10,7 @@
 # liczy sie od dolu
 #
 
-                           e
+                           E
                            X
 
                   XX               XXXX
@@ -31,5 +31,5 @@
 
 
 
-
+                                      e       e       e         e
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB

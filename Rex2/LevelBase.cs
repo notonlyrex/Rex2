@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using System.Numerics;
+using System.Timers;
 
 namespace Rex2
 {
@@ -30,8 +31,8 @@ namespace Rex2
         protected RenderTexture2D screenPlayer2;
         protected Font font;
         protected int framesCounter;
-        protected Timer timer;
-        protected TimerCallback timerCallback;
+        protected System.Timers.Timer timer;
+        protected ElapsedEventHandler timerCallback;
 
         public int ElapsedTime { get; protected set; }
 
@@ -44,6 +45,14 @@ namespace Rex2
             this.screenPlayer2 = screenPlayer2;
 
             font = Raylib.LoadFontEx("assets/opensans.ttf", 48, null, 5000);
+        }
+
+        public virtual void Start()
+        {
+        }
+
+        public virtual void Stop()
+        {
         }
 
         protected virtual void TimerCallback()
@@ -85,6 +94,11 @@ namespace Rex2
         protected void DrawRot13AnimatedText(string text, int timing, int x, int y, int size, Color color)
         {
             Raylib.DrawText(text.Rot13TextAnimation(0, framesCounter / timing), x, y, size, color);
+        }
+
+        protected void DrawAnimatedText(string text, int timing, int x, int y, int size, Color color)
+        {
+            Raylib.DrawText(text.SubTextAnimation(0, framesCounter / timing), x, y, size, color);
         }
 
         protected void DrawCenteredTextEx(string m, int y, int fontSize, Color color)

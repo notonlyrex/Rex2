@@ -1,4 +1,5 @@
 ﻿using Raylib_cs;
+using Rex2.levels;
 using System.Numerics;
 using static Raylib_cs.Color;
 using static Raylib_cs.Raylib;
@@ -28,10 +29,16 @@ namespace Rex2
             Rectangle destRec2 = new Rectangle(324 * scale, 27 * scale, screenWidth * scale, screenHeight * scale);
             Rectangle chevroSrc = new Rectangle(0, 0, chevron.width, chevron.height);
             Rectangle chevroDest = new Rectangle(468 * scale, 330 * scale, 22 * scale, 12 * scale);
-            TestLevel test = new TestLevel(screenHeight, screenWidth, new Vector2(324, 27), ref screenPlayer1, ref screenPlayer2);
 
-            LevelManager levelManager = new LevelManager(test, null!, null!, null!);
-            levelManager.Welcome();
+            TestLevel test = new TestLevel(screenHeight, screenWidth, new Vector2(324, 27), ref screenPlayer1, ref screenPlayer2);
+            LogoScreen logo = new LogoScreen(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2);
+            WinScreen win = new WinScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
+            LoseScreen lose = new LoseScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
+            MenuScreen menu = new MenuScreen(screenWidth, screenHeight, ref screenPlayer1, ref screenPlayer2);
+
+            LevelManager levelManager = new LevelManager(logo, menu, lose, win);
+            levelManager.Add(test);
+            levelManager.Menu();
 
             while (!WindowShouldClose())
             {

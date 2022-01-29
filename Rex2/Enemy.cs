@@ -6,5 +6,6 @@ namespace Rex2
     {
         public int HP { get; set; }
         public Rectangle Rect { get; set; }
+        public bool IsBoss { get; set; } = false;
     }
 }

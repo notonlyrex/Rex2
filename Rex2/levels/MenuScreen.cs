@@ -1,0 +1,80 @@
+﻿using Raylib_cs;
+using static Raylib_cs.Raylib;
+
+namespace Rex2.levels
+{
+    internal class MenuScreen : LevelBase
+    {
+        private List<Dialogue> intro;
+        private int introIndex = 0;
+
+        public MenuScreen(int screenHeight, int screenWidth, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
+        {
+            timer = new System.Timers.Timer();
+            timer.Elapsed += Timer_Elapsed;
+            timer.AutoReset = true;
+            timer.Interval = TimeSpan.FromSeconds(5).TotalMilliseconds;
+
+            var dm = new DialogueManager();
+            intro = dm.Introduction();
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            timer.Start();
+        }
+
+        public override void Stop()
+        {
+            base.Stop();
+            timer.Stop();
+        }
+
+        private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (introIndex < intro.Count - 1)
+            {
+                introIndex++;
+                AudioManager.Instance.Play(Sounds.Dialogue);
+            }
+            else
+            {
+                timer.Stop();
+            }
+        }
+
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+            {
+                LevelManager.Instance.Next();
+            }
+
+            Draw();
+        }
+
+        private void Draw()
+        {
+            BeginTextureMode(screenPlayer1);
+            ClearBackground(Color.LIGHTGRAY);
+
+            DrawText($"FPS: {GetFPS()}", 0, 0, 10, Color.GOLD);
+
+            EndTextureMode();
+
+            BeginTextureMode(screenPlayer2);
+            ClearBackground(Color.LIGHTGRAY);
+
+            for (int i = 0; i < introIndex; i++)
+            {
+                var t = intro[i];
+                DrawText(t.Text, 10, 15 * (i + 1), 10, t.IsNorma ? Color.BLUE : Color.RED);
+            }
+
+            EndTextureMode();
+        }
+    }
+}

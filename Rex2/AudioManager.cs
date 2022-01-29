@@ -18,6 +18,7 @@ namespace Rex2
             _sounds[Sounds.Dialogue] = Raylib.LoadSound(@"assets/dialogue.ogg");
             _sounds[Sounds.ImportantDialogue] = Raylib.LoadSound(@"assets/important-dialogue.ogg");
             _sounds[Sounds.Crush] = Raylib.LoadSound(@"assets/crush.ogg");
+            _sounds[Sounds.Die] = Raylib.LoadSound(@"assets/die.ogg");
         }
 
         public void Play(Sounds s)
@@ -32,6 +33,7 @@ namespace Rex2
         Jump,
         Dialogue,
         ImportantDialogue,
-        Crush
+        Crush,
+        Die
     }
 }

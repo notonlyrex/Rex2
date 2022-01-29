@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Raylib_cs;
+using System.Numerics;
 
 namespace Rex2
 {
@@ -10,5 +11,7 @@ namespace Rex2
         public int HP { get; set; } = 5;
         public int Shield { get; set; }
         public int Ammo { get; set; }
+
+        public Rectangle Rect => new Rectangle(Position.X - 20, Position.Y - 40, 40, 40);
     }
 }

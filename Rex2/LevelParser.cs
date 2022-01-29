@@ -5,7 +5,8 @@
         Base,
         Platform,
         Enemy,
-        Ammo
+        BossEnemy,
+        NormaEnergy
     }
 
     internal class Template
@@ -37,15 +38,20 @@
 
         private static Enemy TemplateToEnemy(Template pt)
         {
-            if (pt.Type != TemplateType.Enemy)
+            if (pt.Type != TemplateType.Enemy && pt.Type != TemplateType.BossEnemy)
                 throw new ArgumentException("pt");
 
             Enemy res = new Enemy()
             {
-                Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 10, height = 10 }
+                Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 10, height = 10 },
+                HP = 1
             };
 
-            res.HP = 1;
+            if (pt.Type == TemplateType.BossEnemy)
+            {
+                res.HP = 5;
+                res.IsBoss = true;
+            }
 
             return res;
         }
@@ -89,6 +95,13 @@
                             p.X = j * 20;
                             p.Y = i * 20;
                         }
+                        else if (line[j] == 'E')
+                        {
+                            p = new Template();
+                            p.Type = TemplateType.BossEnemy;
+                            p.X = j * 20;
+                            p.Y = i * 20;
+                        }
                     }
                     else
                     {
@@ -129,6 +142,7 @@
                     break;
 
                 case TemplateType.Enemy:
+                case TemplateType.BossEnemy:
                     result.Enemies.Add(TemplateToEnemy(p));
                     break;
             }
