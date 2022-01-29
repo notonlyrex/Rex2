@@ -45,7 +45,7 @@
                 Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 10, height = 10 }
             };
 
-            res.HP = 10;
+            res.HP = 1;
 
             return res;
         }

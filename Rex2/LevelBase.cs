@@ -3,57 +3,19 @@ using System.Numerics;
 
 namespace Rex2
 {
-    internal class Player
-    {
-        public Vector2 Position { get; set; }
-        public float Speed { get; set; }
-        public bool CanJump { get; set; }
-        public int HP { get; set; } = 5;
-        public int Shield { get; set; }
-        public int Ammo { get; set; }
-    }
-
-    internal class Enemy
-    {
-        public int HP { get; set; }
-        public Rectangle Rect { get; set; }
-    }
-
-    internal class Powerup
-    {
-        public Rectangle Rect { get; set; }
-    }
-
     internal class LevelDefinition
     {
         public List<Platform> Platforms { get; set; }
         public List<Enemy> Enemies { get; set; }
         public List<Powerup> Powerups { get; set; }
+        public List<Bullet> Bullets { get; set; }
 
         public LevelDefinition()
         {
             Platforms = new List<Platform>();
             Enemies = new List<Enemy>();
             Powerups = new List<Powerup>();
-        }
-    }
-
-    internal class Platform
-    {
-        public Rectangle Rect { get; set; }
-        public bool Blocking { get; set; }
-        public Color Color { get; set; }
-        public int Durability { get; set; }
-
-        public Platform()
-        {
-        }
-
-        public Platform(Rectangle rect, bool blocking, Color color)
-        {
-            this.Rect = rect;
-            this.Blocking = blocking;
-            this.Color = color;
+            Bullets = new List<Bullet>();
         }
     }
 

@@ -17,7 +17,7 @@ namespace Rex2
             const int scale = 2;
 
             InitWindow(gameWidth * scale, gameHeight * scale, "Rex2");
-            SetTargetFPS(120);
+            SetTargetFPS(60);
             RenderTexture2D screenPlayer1 = LoadRenderTexture(screenWidth, screenHeight);
             RenderTexture2D screenPlayer2 = LoadRenderTexture(screenWidth, screenHeight);
             Texture2D baseTexture = LoadTexture("assets/base.png");

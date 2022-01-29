@@ -116,6 +116,17 @@ namespace Rex2
                 player.CanJump = false;
             }
 
+            if (IsKeyPressed(KEY_LEFT_CONTROL) || IsKeyPressed(KEY_RIGHT_CONTROL))
+            {
+                //if (player.Ammo > 0)
+                {
+                    level.Bullets.Add(new Bullet { IsOrientedRight = true, RemainingTime = 5, Position = new Vector2(player.Position.X + 20, player.Position.Y - 10) });
+                }
+            }
+
+            UpdateBullets(deltaTime);
+            UpdateEnemies(deltaTime);
+
             if (IsKeyDown(KEY_F1))
             {
                 EnableHighJump();
@@ -149,6 +160,38 @@ namespace Rex2
             UpdateCameraCenter(ref camera, ref player, level.Platforms, deltaTime, screenWidth, screenHeight);
         }
 
+        private void UpdateEnemies(float deltaTime)
+        {
+            // usuwanie martwych
+            level.Enemies.RemoveAll(x => x.HP <= 0);
+        }
+
+        private void UpdateBullets(float deltaTime)
+        {
+            // aktualizacja pozycji
+            foreach (var item in level.Bullets)
+            {
+                item.Position = new Vector2 { X = item.Position.X + (PLAYER_HOR_SPD + 10) * deltaTime, Y = item.Position.Y };
+                item.RemainingTime -= deltaTime;
+            }
+
+            // aktualizacja kolizji
+            foreach (var item in level.Bullets)
+            {
+                foreach (var e in level.Enemies)
+                {
+                    if (CheckCollisionRecs(item.Rect, e.Rect))
+                    {
+                        e.HP -= 1;
+                        item.RemainingTime = 0;
+                    }
+                }
+            }
+
+            // usuwanie tych co poleciały za daleko
+            level.Bullets.RemoveAll(x => x.RemainingTime <= 0);
+        }
+
         private void EnableHighJump()
         {
             PLAYER_JUMP_SPD = PLAYER_JUMP_SPD + 10;
@@ -163,6 +206,7 @@ namespace Rex2
             BeginMode2D(camera);
 
             RenderPlatforms();
+            RenderBullets();
             RenderEnemies();
             RenderPlayer();
             EndMode2D();
@@ -178,6 +222,14 @@ namespace Rex2
             RenderPlayer2();
 
             EndTextureMode();
+        }
+
+        private void RenderBullets()
+        {
+            foreach (var item in level.Bullets)
+            {
+                DrawRectangleRec(item.Rect, RED);
+            }
         }
 
         private void RenderPlayer2()
@@ -208,7 +260,7 @@ namespace Rex2
                             g.Hover = true;
                         }
 
-                        if (IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON) && !g.Active)
+                        if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && !g.Active)
                         {
                             norma.Board.MarkActive(i, j);
                         }
