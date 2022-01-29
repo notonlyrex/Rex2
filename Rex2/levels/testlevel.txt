@@ -12,7 +12,7 @@
 #
 
                            E
-                           X
+                           
 
                         X
                               X
@@ -22,11 +22,11 @@
                          XXXXXXXXX
 
 
-                         Z
+                         Z      X
 
                              Z
 
-                         Z
+                         Z      X
                          
                              Z
                          
@@ -52,8 +52,8 @@
                   XX               XXXX
 
 
-                          e    e    e
-             ZZZZZ       XX   XX   XX
+                          e     e     e
+             ZZZZZ       XXX   XXX   XXX
 
                     XX
              p

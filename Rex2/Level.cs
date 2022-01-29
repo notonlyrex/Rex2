@@ -27,8 +27,6 @@ namespace Rex2
 
         private DialogueManager dialogueManager;
 
-        private Texture2D jewel;
-
         private bool seenBoss = false;
 
         public Level(int screenHeight, int screenWidth, bool showIntro, string fileName, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
@@ -59,8 +57,6 @@ namespace Rex2
             timer.Elapsed += UpdateTime;
             timer.Interval = TimeSpan.FromSeconds(1).TotalMilliseconds;
             timer.AutoReset = true;
-
-            jewel = LoadTexture("assets/jewel.png");
 
             if (!showIntro)
             {
@@ -384,7 +380,7 @@ namespace Rex2
         private void Draw()
         {
             BeginTextureMode(screenPlayer1);
-            ClearBackground(LIGHTGRAY);
+            ClearBackground(Textures.Background);
 
             BeginMode2D(camera);
 
@@ -403,7 +399,7 @@ namespace Rex2
             EndTextureMode();
 
             BeginTextureMode(screenPlayer2);
-            ClearBackground(WHITE);
+            ClearBackground(Textures.Background);
 
             RenderPlayer2();
 
@@ -484,7 +480,7 @@ namespace Rex2
                     if (g.Active)
                         c = BLACK;
 
-                    DrawTexture(jewel, (int)g.Rect.x, (int)g.Rect.y, c);
+                    DrawTexture(Textures.Jewel, (int)g.Rect.x, (int)g.Rect.y, c);
                 }
             }
         }
@@ -498,14 +494,25 @@ namespace Rex2
 
         private void RenderPlayer()
         {
-            DrawRectangleRec(player.Rect, RED);
+            DrawTextureTiled(Textures.Player, new Rectangle(0, 0, Textures.Player.width, Textures.Player.height), player.Rect, new Vector2(0, 0), 0, 1, WHITE);
         }
 
         private void RenderPlatforms()
         {
             foreach (var item in level.Platforms)
             {
-                DrawRectangleRec(item.Rect, item.Color);
+                if (item.Type == TemplateType.Base)
+                {
+                    DrawTextureTiled(Textures.BasePlatform, new Rectangle(0, 0, Textures.BasePlatform.width, Textures.BasePlatform.height), item.Rect, new Vector2(0, 0), 0, 1, WHITE);
+                }
+                else if (item.Type == TemplateType.Platform)
+                {
+                    DrawTextureTiled(Textures.Platform, new Rectangle(0, 0, Textures.Platform.width, Textures.Platform.height), item.Rect, new Vector2(0, 0), 0, 1, WHITE);
+                }
+                else if (item.Type == TemplateType.DestructiblePlatform)
+                {
+                    DrawTextureTiled(Textures.DestructiblePlatform, new Rectangle(0, 0, Textures.DestructiblePlatform.width, Textures.DestructiblePlatform.height), item.Rect, new Vector2(0, 0), 0, 1, WHITE);
+                }
             }
         }
 
@@ -513,7 +520,14 @@ namespace Rex2
         {
             foreach (var item in level.Enemies)
             {
-                DrawRectangleRec(item.Rect, item.IsBoss ? GOLD : YELLOW);
+                if (item.IsBoss)
+                {
+                    DrawTexturePro(Textures.Boss, new Rectangle(0, 0, Textures.Boss.width, Textures.Boss.height), item.Rect, new Vector2(0, 0), 0, WHITE);
+                }
+                else
+                {
+                    DrawTexturePro(Textures.Enemy, new Rectangle(0, 0, Textures.Enemy.width, Textures.Enemy.height), item.Rect, new Vector2(0, 0), 0, WHITE);
+                }
             }
         }
 
@@ -529,8 +543,6 @@ namespace Rex2
         public override void Unload()
         {
             base.Unload();
-
-            UnloadTexture(jewel);
         }
 
         public override void Start()

@@ -6,7 +6,7 @@ namespace Rex2
     {
         public Rectangle Rect { get; set; }
         public bool Blocking { get; set; }
-        public Color Color { get; set; }
+        public TemplateType Type { get; set; }
         public float Durability { get; set; }
         public bool Touched { get; internal set; }
 
@@ -14,11 +14,11 @@ namespace Rex2
         {
         }
 
-        public Platform(Rectangle rect, bool blocking, Color color)
+        public Platform(Rectangle rect, bool blocking, TemplateType type)
         {
             this.Rect = rect;
             this.Blocking = blocking;
-            this.Color = color;
+            this.Type = type;
         }
     }
 }

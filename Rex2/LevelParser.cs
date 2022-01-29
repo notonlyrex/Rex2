@@ -4,7 +4,7 @@
     {
         Base,
         Platform,
-        DestroyablePlatform,
+        DestructiblePlatform,
         Enemy,
         BossEnemy,
         Powerup
@@ -23,23 +23,23 @@
     {
         private static Platform TemplateToPlatform(Template pt)
         {
-            if (pt.Type != TemplateType.Platform && pt.Type != TemplateType.Base && pt.Type != TemplateType.DestroyablePlatform)
+            if (pt.Type != TemplateType.Platform && pt.Type != TemplateType.Base && pt.Type != TemplateType.DestructiblePlatform)
                 throw new ArgumentException("pt");
 
             Platform res = new Platform() { Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = pt.Width, height = (pt.Type == TemplateType.Base) ? 200 : 10 } };
             res.Blocking = true;
 
-            if (pt.Type == TemplateType.DestroyablePlatform)
+            if (pt.Type == TemplateType.DestructiblePlatform)
             {
                 res.Durability = 2;
                 res.Touched = false;
-                res.Color = Raylib_cs.Color.BEIGE;
+                res.Type = TemplateType.DestructiblePlatform;
             }
 
             if (pt.Type == TemplateType.Base)
-                res.Color = Raylib_cs.Color.DARKGRAY;
+                res.Type = TemplateType.Base;
             else if (pt.Type == TemplateType.Platform)
-                res.Color = Raylib_cs.Color.GRAY;
+                res.Type = TemplateType.Platform;
 
             return res;
         }
@@ -51,12 +51,13 @@
 
             Enemy res = new Enemy()
             {
-                Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 10, height = 10 },
+                Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 33, height = 22 },
                 HP = 1
             };
 
             if (pt.Type == TemplateType.BossEnemy)
             {
+                res.Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 50, height = 55 };
                 res.HP = 5;
                 res.IsBoss = true;
             }
@@ -99,7 +100,7 @@
                         else if (line[j] == 'Z')
                         {
                             p = new Template();
-                            p.Type = TemplateType.DestroyablePlatform;
+                            p.Type = TemplateType.DestructiblePlatform;
                             p.X = j * 20;
                             p.Y = i * 20;
                             p.Width += 20;
@@ -167,7 +168,7 @@
             {
                 case TemplateType.Base:
                 case TemplateType.Platform:
-                case TemplateType.DestroyablePlatform:
+                case TemplateType.DestructiblePlatform:
                     result.Platforms.Add(TemplateToPlatform(p));
                     break;
 
