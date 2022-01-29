@@ -106,7 +106,7 @@ namespace Rex2
         private void UpdateTime(object? state)
         {
             ElapsedTime++;
-            dialogueManager.UpdateDialogue(this, level, player);
+            dialogueManager.UpdateDialogue(this, level, player, norma);
         }
 
         public override void Update(float deltaTime)
@@ -258,11 +258,13 @@ namespace Rex2
             EndTextureMode();
         }
 
-        private void RenderPlayerStats()
+        private void DrawResources()
         {
             DrawText($"{player.HP}", 60, 15, 20, RED);
             DrawText($"{player.Shield}", 265, 15, 20, GREEN);
             DrawText($"{player.Ammo}", 470, 15, 20, BLUE);
+
+            DrawText($"{norma.Energy}", 770, 15, 20, GOLD);
         }
 
         private void RenderBullets()
@@ -275,15 +277,7 @@ namespace Rex2
 
         private void RenderPlayer2()
         {
-            //DrawRot13AnimatedText("Wake up, Rex!", 10, 0, 220, 14, MAGENTA);
-            //DrawCenteredText("Zażółć gęślą jaźń", 50, 18, GREEN);
-            //DrawRectangledTextEx(new Rectangle(20, 20, 120, 120), "This is a longer text with wrapping.", 14, DARKGREEN, GRAY);
-
-            //DrawRectangle(0, 0, 319, 10, RED);
-
             Vector2 virtualMouse = GetVirtualMouse();
-
-            //DrawText($"{virtualMouse.X}, {virtualMouse.Y}", 0, 0, 10, GOLD);
 
             for (int i = 0; i < norma.Board.sizeX; i++)
             {
@@ -294,7 +288,7 @@ namespace Rex2
                     if (g == null)
                         continue;
 
-                    if (CheckCollisionPointRec(virtualMouse, g.Rect))
+                    if (CheckCollisionPointRec(virtualMouse, g.Rect) && norma.Energy > 0)
                     {
                         if (!g.Hover)
                         {
@@ -303,21 +297,13 @@ namespace Rex2
 
                         if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) && !g.Active)
                         {
-                            norma.Board.MarkActive(i, j);
+                            norma.Board.MarkActive(i, j, norma);
                         }
                     }
                     else if (g.Hover)
                     {
                         g.Hover = false;
                     }
-
-                    //if (IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON))
-                    //{
-                    //    if (g.Hover)
-                    //    {
-                    //        g.Active = true;
-                    //    }
-                    //}
 
                     Color c = WHITE;
 
@@ -339,8 +325,6 @@ namespace Rex2
                         c = BLACK;
 
                     DrawTexture(jewel, (int)g.Rect.x, (int)g.Rect.y, c);
-
-                    //DrawRectangle((int)g.Rect.x, (int)g.Rect.y, (int)g.Rect.width, (int)g.Rect.height, c);
                 }
             }
         }
@@ -378,7 +362,7 @@ namespace Rex2
         {
             base.DrawMain();
 
-            RenderPlayerStats();
+            DrawResources();
             DrawDialogueText(dialogueManager.DisplayedDialogue.Text, dialogueManager.DisplayedDialogue.IsNorma ? BLUE : RED);
             DrawRemainingTime(level.LevelTime - ElapsedTime);
         }

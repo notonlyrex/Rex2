@@ -4,10 +4,10 @@ using System.Numerics;
 
 namespace Rex2
 {
-    internal class Norma
+    public class Norma
     {
         public Match3GameManager Board { get; set; }
-        public int Energy { get; set; } = 0;
+        public int Energy { get; set; } = 10;
 
         public Action<TileType, int> GiveBuff { get; set; }
 
@@ -187,8 +187,11 @@ namespace Rex2
         public Vector2? FirstActive { get; set; }
         public Vector2? SecondActive { get; set; }
 
-        public void MarkActive(int x, int y)
+        public void MarkActive(int x, int y, Norma parent)
         {
+            if (parent.Energy <= 0)
+                return;
+
             if (FirstActive == null)
             {
                 FirstActive = new Vector2(x, y);
@@ -207,6 +210,7 @@ namespace Rex2
                 if (l == 1)
                 {
                     SwapTiles((int)FirstActive.Value.X, (int)FirstActive.Value.Y, (int)SecondActive.Value.X, (int)SecondActive.Value.Y);
+                    parent.Energy--;
                     Check();
                 }
 

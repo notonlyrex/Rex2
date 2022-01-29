@@ -190,7 +190,7 @@
             dialogueShowTime = elapsedTime;
         }
 
-        public void UpdateDialogue(LevelBase level, LevelDefinition def, Player player)
+        public void UpdateDialogue(LevelBase level, LevelDefinition def, Player player, Norma norma)
         {
             if (def.LevelTime - level.ElapsedTime < 30 && currentSequence != outOfTime)
             {
@@ -201,6 +201,12 @@
             if (player.HP < 2 && currentSequence != lowHp)
             {
                 UpdateDialogueOnSituation(Situation.LowHP);
+                return;
+            }
+
+            if (norma.Energy < 2 && currentSequence != takeShiny)
+            {
+                UpdateDialogueOnSituation(Situation.LowNormaEnergy);
                 return;
             }
 
