@@ -130,9 +130,33 @@ namespace Rex2
             UpdateBullets(deltaTime);
             UpdateEnemies(deltaTime);
 
-            if (IsKeyDown(KEY_F1))
+            if (IsKeyPressed(KEY_F1))
             {
                 EnableHighJump();
+            }
+
+            if (IsKeyPressed(KEY_F2))
+            {
+                AudioManager.Instance.Play(Sounds.ImportantDialogue);
+                player.HP++;
+            }
+
+            if (IsKeyPressed(KEY_F3))
+            {
+                AudioManager.Instance.Play(Sounds.ImportantDialogue);
+                player.Ammo++;
+            }
+
+            if (IsKeyPressed(KEY_F4))
+            {
+                AudioManager.Instance.Play(Sounds.ImportantDialogue);
+                player.Shield++;
+            }
+
+            if (IsKeyPressed(KEY_F5))
+            {
+                AudioManager.Instance.Play(Sounds.ImportantDialogue);
+                norma.Energy++;
             }
 
             UpdatePlayerOnPlatforms(deltaTime);
@@ -178,6 +202,8 @@ namespace Rex2
 
             if ((IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_W)) && player.CanJump)
             {
+                AudioManager.Instance.Play(Sounds.Jump);
+
                 player.Speed = -PLAYER_JUMP_SPD;
 
                 player.CanJump = false;
@@ -187,6 +213,7 @@ namespace Rex2
             {
                 if (player.Ammo > 0)
                 {
+                    AudioManager.Instance.Play(Sounds.Bullet);
                     level.Bullets.Add(new Bullet { IsOrientedRight = true, RemainingTime = 5, Position = new Vector2(player.Position.X + 20, player.Position.Y - 10) });
                     player.Ammo--;
                 }

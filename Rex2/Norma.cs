@@ -144,7 +144,10 @@ namespace Rex2
             }
 
             if (!sw)
+            {
+                AudioManager.Instance.Play(Sounds.Crush);
                 Gravity();
+            }
         }
 
         private void Gravity()
@@ -157,14 +160,11 @@ namespace Rex2
                 {
                     for (int i = 0; i < sizeX; i++)
                     {
-                        //TODO CAER
                         if (Fall(i, j))
                         {
                             Sw = true;
                         }
                     }
-
-                    //if (j <= sizeY && !fast) //<-Wait
                 }
             }
 
@@ -217,13 +217,6 @@ namespace Rex2
                 FirstActive = null;
                 SecondActive = null;
             }
-            //else
-            //{
-            //    Grid[(int)FirstActive.Value.X, (int)FirstActive.Value.Y].Active = false;
-            //    Grid[(int)SecondActive.Value.X, (int)SecondActive.Value.Y].Active = false;
-            //    FirstActive = null;
-            //    SecondActive = null;
-            //}
         }
 
         private List<Tile> CheckHorizontalMatches()

@@ -179,6 +179,7 @@
 
         private void UpdateCurrentSequence()
         {
+            AudioManager.Instance.Play(Sounds.Dialogue);
             currentSequence = randomSequences[currentSequenceIndex];
             displayedDialogue = currentSequence[0];
             dialogueIndex = 0;
@@ -214,6 +215,11 @@
             {
                 if (dialogueIndex + 1 < currentSequence.Count)
                 {
+                    if (currentSequence[dialogueIndex + 1].Text.Length > 0)
+                    {
+                        AudioManager.Instance.Play(Sounds.Dialogue);
+                    }
+
                     dialogueIndex++;
                 }
                 else
@@ -237,6 +243,7 @@
 
         public void UpdateDialogueOnSituation(Situation s)
         {
+            AudioManager.Instance.Play(Sounds.ImportantDialogue);
             switch (s)
             {
                 case Situation.HighJump:
