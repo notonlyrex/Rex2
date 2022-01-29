@@ -72,7 +72,7 @@ namespace Rex2.levels
         private void Draw()
         {
             BeginTextureMode(screenPlayer1);
-            ClearBackground(Textures.Background);
+            DrawTexture(Textures.BackgroundScreen1, 0, 0, Color.WHITE);
 
             for (int i = 0; i < introIndex; i++)
             {

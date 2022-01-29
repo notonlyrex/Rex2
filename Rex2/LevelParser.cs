@@ -68,6 +68,7 @@
             {
                 res.Rect = new Raylib_cs.Rectangle { x = pt.X, y = pt.Y, width = 50, height = 55 };
                 res.HP = 5;
+                res.Origin = new System.Numerics.Vector2(pt.X, pt.Y);
                 res.IsBoss = true;
             }
 

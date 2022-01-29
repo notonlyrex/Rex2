@@ -20,6 +20,7 @@ namespace Rex2
         private float PlayerSpeed = 200.0f;
         private float BulletSpeed = 250.0f;
         private float EnemySpeed = 100.0f;
+        private float BossSpeed = 50.0f;
 
         private readonly LevelDefinition level;
         private readonly Norma norma;
@@ -332,6 +333,13 @@ namespace Rex2
                 item.Rect = new Rectangle(item.Rect.x - (EnemySpeed * deltaTime), item.Rect.y, item.Rect.width, item.Rect.height);
                 if ((new Vector2(item.Rect.x, item.Rect.y) - item.Origin).Length() > 100)
                     EnemySpeed = -EnemySpeed;
+            }
+
+            foreach (var item in level.Enemies.Where(x => x.IsBoss))
+            {
+                item.Rect = new Rectangle(item.Rect.x, item.Rect.y - (BossSpeed * deltaTime), item.Rect.width, item.Rect.height);
+                if ((new Vector2(item.Rect.x, item.Rect.y) - item.Origin).Length() > 30)
+                    BossSpeed = -BossSpeed;
             }
 
             if (level.Enemies.Any(x => x.HP == 0))
