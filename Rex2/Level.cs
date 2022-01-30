@@ -453,26 +453,28 @@ namespace Rex2
                         g.Hover = false;
                     }
 
-                    Color c = WHITE;
+                    Texture2D cryst = Textures.CrystalWhite;
 
                     if (g.type == TileType.RED)
-                        c = RED;
+                        cryst = Textures.CrystalRed;
                     else if (g.type == TileType.GREEN)
-                        c = GREEN;
+                        cryst = Textures.CrystalGreen;
                     else if (g.type == TileType.BLUE)
-                        c = BLUE;
+                        cryst = Textures.CrystalBlue;
                     else if (g.type == TileType.WHITE)
-                        c = WHITE;
+                        cryst = Textures.CrystalWhite;
                     else if (g.type == TileType.YELLOW)
-                        c = YELLOW;
+                        cryst = Textures.CrystalYellow;
+
+                    Color c = Color.WHITE;
 
                     if (g.Hover)
-                        c = GOLD;
+                        c = YELLOW;
 
                     if (g.Active)
-                        c = BLACK;
+                        c = RED;
 
-                    DrawTexture(Textures.Jewel, (int)g.Rect.x, (int)g.Rect.y, c);
+                    DrawTexture(cryst, (int)g.Rect.x, (int)g.Rect.y, c);
                 }
             }
         }
