@@ -35,8 +35,9 @@ namespace Rex2.levels
             DrawRot13AnimatedText("+ surt https://opengameart.org/content/darknes", 10, 10, 60, 15, Color.GREEN);
             DrawRot13AnimatedText("+ SpriteLib by Ari Feldman", 10, 10, 80, 15, Color.GREEN);
             DrawRot13AnimatedText("+ EEEnt-OFFICIAL", 10, 10, 100, 15, Color.GREEN);
-            DrawRot13AnimatedText("Music: Marylka", 10, 10, 120, 15, Color.BLUE);
-            DrawRot13AnimatedText("Sounds: Kenney (www.kenney.nl)", 10, 10, 140, 15, Color.GOLD);
+            DrawRot13AnimatedText("+ Pixel Ship Generator: https://thydungeonsean.itch.io/pixel-ship-generator", 10, 10, 120, 15, Color.GREEN);
+            DrawRot13AnimatedText("Music: Marylka", 10, 10, 140, 15, Color.BLUE);
+            DrawRot13AnimatedText("Sounds: Kenney (www.kenney.nl)", 10, 10, 160, 15, Color.GOLD);
 
             EndTextureMode();
 
