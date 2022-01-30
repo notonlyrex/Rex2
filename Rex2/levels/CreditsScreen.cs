@@ -10,7 +10,7 @@ namespace Rex2.levels
         public CreditsScreen(int screenHeight, int screenWidth, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
             menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 10, width = 200, height = 50 }, Text = "Start game", Action = () => LevelManager.Instance.Next() });
-            menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 130, width = 200, height = 50 }, Text = "Exit", Action = () => CloseWindow() });
+            menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 130, width = 200, height = 50 }, Text = "Exit", Action = () => Environment.Exit(0) });
         }
 
         public override void Update(float deltaTime)
@@ -32,14 +32,11 @@ namespace Rex2.levels
 
             DrawAnimatedText("Code: Marcin \"Ktos\" Badurowicz", 10, 10, 10, 15, Color.RED);
             DrawRot13AnimatedText("Graphics: Stanislaw Skulimowski", 10, 10, 40, 15, Color.GREEN);
-            DrawRot13AnimatedText("Music: Maryla Kapustka", 10, 10, 60, 15, Color.BLUE);
-            DrawRot13AnimatedText("Sounds: Kenney (www.kenney.nl)", 10, 10, 80, 15, Color.GOLD);
-
-            /*
-             * surt https://opengameart.org/content/darknes
-             * SpriteLib Original copyright © 1996-2017 by Ari Feldman
-             * © 2017 - 2022 EEEnt-OFFICIAL
-             */
+            DrawRot13AnimatedText("+ surt https://opengameart.org/content/darknes", 10, 10, 60, 15, Color.GREEN);
+            DrawRot13AnimatedText("+ SpriteLib by Ari Feldman", 10, 10, 80, 15, Color.GREEN);
+            DrawRot13AnimatedText("+ EEEnt-OFFICIAL", 10, 10, 100, 15, Color.GREEN);
+            DrawRot13AnimatedText("Music: Marylka", 10, 10, 120, 15, Color.BLUE);
+            DrawRot13AnimatedText("Sounds: Kenney (www.kenney.nl)", 10, 10, 140, 15, Color.GOLD);
 
             EndTextureMode();
 
