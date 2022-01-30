@@ -45,4 +45,4 @@ Music: Marylka
 
 Sounds: [Kenney](www.kenney.nl)
 
-Licensed under [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/pl/).
+Licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA)](https://creativecommons.org/licenses/by-nc-sa/3.0/pl/).
