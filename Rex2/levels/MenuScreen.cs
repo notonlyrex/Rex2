@@ -29,7 +29,7 @@ namespace Rex2.levels
 
             menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 10, width = 200, height = 50 }, Text = "Start game", Action = () => LevelManager.Instance.Next() });
             menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 70, width = 200, height = 50 }, Text = "Credits", Action = () => LevelManager.Instance.Credits() });
-            menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 130, width = 200, height = 50 }, Text = "Exit", Action = () => CloseWindow() });
+            menu.Add(new MenuOption { Rect = new Rectangle { x = 10, y = 130, width = 200, height = 50 }, Text = "Exit", Action = () => Environment.Exit(0) });
         }
 
         public override void Start()
