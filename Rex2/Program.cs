@@ -50,7 +50,7 @@ namespace Rex2
             levelManager.Add(first);
 
 #if DEBUG
-            levelManager.Menu();
+            levelManager.Welcome();
 #else
             levelManager.Welcome();
 #endif

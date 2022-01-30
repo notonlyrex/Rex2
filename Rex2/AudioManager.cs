@@ -51,7 +51,7 @@ namespace Rex2
 
             isLevelMusicPlaying = isLevel;
             isPlaying = true;
-            Raylib.SetMusicVolume(music, 0.1f);
+            Raylib.SetMusicVolume(music, 0.5f);
             Raylib.PlayMusicStream(music);
         }
 
