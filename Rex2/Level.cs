@@ -22,49 +22,23 @@ namespace Rex2
         private float EnemySpeed = 100.0f;
         private float BossSpeed = 50.0f;
 
-        private readonly LevelDefinition level;
-        private readonly Norma norma;
+        private LevelDefinition level;
+        private Norma norma;
 
         private Camera2D camera;
         private Player player;
 
-        private readonly DialogueManager dialogueManager;
+        private DialogueManager dialogueManager;
 
         private bool seenBoss = false;
 
+        private string fileName;
+        private bool showIntro;
+
         public Level(int screenHeight, int screenWidth, bool showIntro, string fileName, ref RenderTexture2D screenPlayer1, ref RenderTexture2D screenPlayer2) : base(screenHeight, screenWidth, ref screenPlayer1, ref screenPlayer2)
         {
-            level = LevelParser.Parse($"levels/{fileName}.txt");
-
-            player = new Player();
-            player.Position = new Vector2(400, level.StartingY);
-            player.Speed = 0;
-            player.CanJump = false;
-
-            camera = new Camera2D();
-            camera.target = player.Position;
-            camera.offset = new Vector2(screenWidth / 2, screenHeight / 2);
-            camera.rotation = 0.0f;
-            camera.zoom = 1.0f;
-
-            framesCounter = 0;
-
-            ElapsedTime = 0;
-
-            dialogueManager = new DialogueManager();
-
-            norma = new Norma();
-            norma.GiveBuff += BuffPlayer;
-
-            timer = new System.Timers.Timer();
-            timer.Elapsed += UpdateTime;
-            timer.Interval = TimeSpan.FromSeconds(1).TotalMilliseconds;
-            timer.AutoReset = true;
-
-            if (!showIntro)
-            {
-                seenBoss = true;
-            }
+            this.fileName = fileName;
+            this.showIntro = showIntro;
         }
 
         private void BuffPlayer(TileType t, int count)
@@ -558,6 +532,44 @@ namespace Rex2
         public override void Start()
         {
             base.Start();
+            level = LevelParser.Parse($"levels/{fileName}.txt");
+
+            player = new Player();
+            player.Position = new Vector2(400, level.StartingY);
+            player.Speed = 0;
+            player.CanJump = false;
+
+            camera = new Camera2D();
+            camera.target = player.Position;
+            camera.offset = new Vector2(screenWidth / 2, screenHeight / 2);
+            camera.rotation = 0.0f;
+            camera.zoom = 1.0f;
+
+            framesCounter = 0;
+
+            ElapsedTime = 0;
+
+            dialogueManager = new DialogueManager();
+
+            norma = new Norma();
+            norma.GiveBuff += BuffPlayer;
+
+            timer = new System.Timers.Timer();
+            timer.Elapsed += UpdateTime;
+            timer.Interval = TimeSpan.FromSeconds(1).TotalMilliseconds;
+            timer.AutoReset = true;
+
+            if (!showIntro)
+            {
+                seenBoss = true;
+            }
+
+            PlayerJumpSpeed = 350.0f;
+            PlayerSpeed = 200.0f;
+            BulletSpeed = 250.0f;
+            EnemySpeed = 100.0f;
+            BossSpeed = 50.0f;
+
             timer.Start();
         }
 
