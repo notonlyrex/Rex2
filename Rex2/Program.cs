@@ -75,8 +75,11 @@ namespace Rex2
 
                     levelManager.Current.DrawMain();
 
-                    // dorysuj chevron na dole
-                    DrawTexturePro(chevron, chevroSrc, chevroDest, new Vector2(0, 0), 0, WHITE);
+                    if (levelManager.Current.GetType() == typeof(Level))
+                    {
+                        // dorysuj chevron na dole
+                        DrawTexturePro(chevron, chevroSrc, chevroDest, new Vector2(0, 0), 0, WHITE);
+                    }
 
                     AudioManager.Instance.UpdateMusicStream();
 
