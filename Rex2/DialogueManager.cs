@@ -64,6 +64,7 @@
                 new Dialogue { Text = "This will give you health, shields and ammo.", IsNorma = true },
                 new Dialogue { Text = "Use CTRL to shoot if you have ammo.", IsNorma = true },
                 new Dialogue { Text = "Try not to touch the virus without shields.", IsNorma = true },
+                new Dialogue { Text = "We're going up to meet the main core.", IsNorma = true },
                 new Dialogue { Text = "Let's go.", IsNorma = false },
                 empty
             };
