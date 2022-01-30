@@ -36,6 +36,7 @@ namespace Rex2.levels
         {
             base.Start();
             timer.Start();
+            AudioManager.Instance.PlayMusic(false);
         }
 
         public override void Stop()

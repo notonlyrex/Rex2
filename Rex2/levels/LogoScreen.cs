@@ -28,7 +28,7 @@ namespace Rex2.levels
         public override void Start()
         {
             base.Start();
-            AudioManager.Instance.PlayMusic();
+            AudioManager.Instance.PlayMusic(false);
         }
     }
 }

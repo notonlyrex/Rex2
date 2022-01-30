@@ -571,6 +571,7 @@ namespace Rex2
             BossSpeed = 50.0f;
 
             timer.Start();
+            AudioManager.Instance.PlayMusic(true);
         }
 
         public override void Stop()

@@ -5,7 +5,13 @@ namespace Rex2
     public class AudioManager
     {
         private Dictionary<Sounds, Sound> _sounds;
+        private Music levelMusic;
+        private Music menuMusic;
+
         private Music music;
+
+        private bool isPlaying = false;
+        private bool isLevelMusicPlaying = false;
 
         public static AudioManager Instance { get; private set; } = new AudioManager();
 
@@ -22,11 +28,29 @@ namespace Rex2
             _sounds[Sounds.Die] = Raylib.LoadSound(@"assets/die.ogg");
             _sounds[Sounds.Take] = Raylib.LoadSound(@"assets/take.ogg");
 
-            music = Raylib.LoadMusicStream("assets/music.mp3");
+            levelMusic = Raylib.LoadMusicStream("assets/level.mp3");
+            menuMusic = Raylib.LoadMusicStream("assets/menu.mp3");
         }
 
-        public void PlayMusic()
+        public void PlayMusic(bool isLevel)
         {
+            if (isPlaying && isLevel != isLevelMusicPlaying)
+            {
+                Raylib.StopMusicStream(music);
+                isPlaying = false;
+            }
+
+            if (isLevel)
+            {
+                music = levelMusic;
+            }
+            else
+            {
+                music = menuMusic;
+            }
+
+            isLevelMusicPlaying = isLevel;
+            isPlaying = true;
             Raylib.SetMusicVolume(music, 0.1f);
             Raylib.PlayMusicStream(music);
         }
