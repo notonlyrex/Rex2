@@ -14,11 +14,11 @@
 
 ![Rex2 fail screen](docs/3.png)
 
-## Diversifiers
+## Theme & Diversifiers
 
 "Duality" is achieved on a few levels - there is "2" in the game title, the game is for two players, two games inside are very different, and there is a dualism of human (Rex) and machine (Norma).
 
-* 20th Century Gaming - Your game's visuals are in the style of games from a device released before the year 2000 ,
+* 20th Century Gaming - Your game's visuals are in the style of games from a device released before the year 2000,
 * Take A Break - Each member of the team has to take at least one break every 2-3 hours,
 * Brxu Vhfuhw lv Vdih zlwk Ph - Include cryptography and ciphers in the gameplay or narrative of your game!
 
